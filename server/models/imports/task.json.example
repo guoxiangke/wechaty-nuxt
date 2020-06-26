@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "name": "每日诗篇(150)",
+      "description": "每日发布诗篇任务",
+      "type": "Audio",
+      "path": "/usr/src/app/files/19_Psalm/19_${current}.mp3",
+      "isByCount": true,
+      "config": {
+        "count": 150,
+        "pad": 3,
+        "fill": "0"
+      }
+    },
+    {
+      "name": "每日祈祷(365)",
+      "description": "每日发布祈祷mp4",
+      "type": "Video",
+      "path": "https://xxx.xxx.cn/PrayEveryday/videos/${current}.mp4",
+      "isByCount": false,
+      "config": {
+        "count": null,
+        "pad": null,
+        "fill": null
+      }
+    }
+  ]
+}

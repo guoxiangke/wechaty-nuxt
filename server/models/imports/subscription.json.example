@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "taskId": 1,
+      "cron": "0 7 * * *",
+      "to": [
+        { "type": "room", "value": "七里渠之光" },
+        { "type": "room", "value": "神恩同学" },
+        { "type": "room", "value": "亲人之家" },
+        { "type": "room", "value": "开心大家庭" },
+        { "type": "room", "value": "重生之路" },
+        { "type": "room", "value": "厢红旗之盐" },
+        { "type": "room", "value": "活水工人" },
+        { "type": "room", "value": "西三旗交流群" },
+        { "type": "room", "value": "西罗亚小组" },
+        { "type": "room", "value": "西奈山jh" },
+        { "type": "room", "value": "活水" }
+      ],
+      "offset": "2020-2-25"
+    },
+    {
+      "taskId": 2,
+      "cron": "5 7 * * *",
+      "to": [{ "value": "天空蔚蓝", "type": "name" }]
+    }
+  ]
+}

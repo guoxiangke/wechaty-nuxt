@@ -88,3 +88,10 @@ sw.*
 
 # Vim swap files
 *.swp
+
+/docs
+/files
+/screenshot
+*.memory-card.json
+/server/models/imports/*.json
+/server/database/db.sqlite

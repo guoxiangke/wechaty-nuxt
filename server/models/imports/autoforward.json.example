@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "isRoom": true,
+      "fromName": "每日一篇",
+      "senders": ["AI机器人", "hs弟兄"],
+      "destinations": [
+        { "type": "room", "topic": "亲人之家" },
+        { "type": "room", "topic": "活水" }
+      ]
+    },
+    {
+      "isRoom": true,
+      "fromName": "主人0421",
+      "senders": ["AI机器人", "天空"],
+      "destinations": [{ "type": "room", "topic": "Source群" }]
+    },
+    {
+      "isRoom": false,
+      "fromName": "天空",
+      "senders": [],
+      "destinations": [
+        { "type": "room", "topic": "Source群" },
+        { "type": "contact", "alias": "hs弟兄" }
+      ]
+    }
+  ]
+}

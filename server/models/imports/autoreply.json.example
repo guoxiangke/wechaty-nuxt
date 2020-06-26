@@ -1,0 +1,66 @@
+{
+  "updated_at": "2020-06-19 06:40:00",
+  "data": [
+    {
+      "key": "ping",
+      "reply": {
+        "type": "Text",
+        "data": "pong"
+      }
+    },
+    {
+      "key": "mp3",
+      "reply": {
+        "type": "Audio",
+        "data": "/Users/dale/Downloads/Share/19_Psalm/19_059.mp3"
+      }
+    },
+    {
+      "key": "mp4",
+      "reply": {
+        "type": "Video",
+        "data": "/Users/dale/Downloads/Share/PrayEveryday/videos/0102.mp4"
+      }
+    },
+    {
+      "key": "image",
+      "reply": {
+        "type": "Image",
+        "data": "https://i.loli.net/2020/04/22/GbYLMgv39A7JdZf.jpg"
+      }
+    },
+    {
+      "key": "localImage",
+      "reply": {
+        "type": "Image",
+        "data": "/Users/dale/Downloads/Share/PrayEveryday/images/0101.jpg"
+      }
+    },
+    {
+      "key": "attachment",
+      "reply": {
+        "type": "Attachment",
+        "data": "https://cdn.simai.ml/17_001.mp3"
+      }
+    },
+    {
+      "key": "who",
+      "reply": {
+        "type": "Contact",
+        "data": "天空蔚蓝"
+      }
+    },
+    {
+      "key": "link",
+      "reply": {
+        "type": "Url",
+        "content": {
+          "description": "WeChat Bot SDK for Individual Account",
+          "thumbnailUrl": "https://i.loli.net/2020/04/22/GbYLMgv39A7JdZf.jpg",
+          "title": "Link reply",
+          "url": "https://github.com"
+        }
+      }
+    }
+  ]
+}
