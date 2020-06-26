@@ -1,68 +1,86 @@
 import * as Koa from 'koa'
+import { Wechaty, Contact, Room } from 'wechaty'
+import { log } from 'brolog'
 import { Wechat } from '../bot'
 import { Bot } from '../models'
+import { Vars as Global } from '../global-var'
 
 export default class BotController {
   public static async login(ctx: Koa.Context): Promise<void> {
     if (!ctx.params.id) throw new Error('缺少id')
     const id = ctx.params.id
-
     const bot: Bot | null = await Bot.findByPk(id)
     if (!bot) throw new Error('机器人不存在')
     if (!bot.token) throw new Error('缺少协议token')
 
-    const webot = new Wechat(bot)
     // 如果已经登录，不再重复登录！
     let result: any = {}
     if (bot.status) {
-      result = { isLogin: true }
+      result = { isLogin: 'already' }
+      log.error('already', Global.getWechaty(bot))
     } else {
+      const webot = new Wechat(bot)
       result = await webot.start()
+      // 缓存到内存中，
+      const wechaty: Wechaty | null = webot.wechaty
+      if (!wechaty) throw new Error('should have wechaty')
+      // tmp绕一圈，不可直接复制，报错
+      const tmp: any = Global.wechaty ? Global.wechaty : [] // 保留旧数据
+      tmp[bot.id] = wechaty // 添加新的
+      Global.wechaty = tmp // 缓存成功，Global.getWechaty(bot)获取
     }
-
-    // await wechays[0].stop()
-
     // const result = {"qrcode":"http://weixin.qq.com/x/Ifj3ZIn5AkXnSMGSAPvu"}
+    // { isLogin: true }
     ctx.body = result
+  }
+
+  public static async logout(ctx: Koa.Context): Promise<void> {
+    if (!ctx.params.id) throw new Error('缺少id')
+    const id = ctx.params.id
+    const bot: Bot | null = await Bot.findByPk(id)
+    if (!bot) throw new Error('机器人不存在')
+    if (!bot.token) throw new Error('缺少协议token')
+
+    const wechaty = Global.getWechaty(bot)
+    await wechaty.stop()
+    ctx.body = { isLogin: false }
+  }
+
+  public static async roomSay(ctx: Koa.Context): Promise<void> {
+    if (!ctx.params.id) throw new Error('缺少id')
+    const id = ctx.params.id
+    const bot: Bot | null = await Bot.findByPk(id)
+    if (!bot) throw new Error('机器人不存在')
+    if (!bot.token) throw new Error('缺少协议token')
+
+    const wechaty = Global.getWechaty(bot)
+
+    const room: Room | null = await wechaty.Room.find({
+      id: ctx.params.room_id
+    })
+    if (!room) throw new Error('should have contact to say')
+    await room.say(ctx.request.body.content)
+    ctx.body = {}
+  }
+
+  public static async friendSay(ctx: Koa.Context): Promise<void> {
+    if (!ctx.params.id) throw new Error('缺少id')
+    const id = ctx.params.id
+    const bot: Bot | null = await Bot.findByPk(id)
+    if (!bot) throw new Error('机器人不存在')
+    if (!bot.token) throw new Error('缺少协议token')
+
+    const wechaty = Global.getWechaty(bot)
+
+    const contact: Contact | null = await wechaty.Contact.find({
+      id: ctx.params.contact_id
+    })
+    if (!contact) throw new Error('should have contact to say')
+    await contact.say(ctx.request.body.content)
+    ctx.body = {}
   }
 }
 // module.exports = {
-//   login: (ctx: any) => {
-//     // if (!ctx.request.body.id) throw new Error('缺少id')
-//     const bot = new Bot() // ctx.request.body.id
-//     const result = bot.start()
-//     // const result = 1
-//     log.info('SUCCESS', `${JSON.stringify({ result })}`)
-//     ctx.body = result
-//     return '1'
-//   }
-//   // loginOut: async (ctx) => {
-//   //   try {
-//   //     if (!global.bot) {
-//   //       await Robot.updateOne({ _id: ctx.request.body.id }, { status: 0 })
-//   //       delete global.bot
-//   //       return (ctx.body = {})
-//   //     }
-//   //     await bot.logout()
-//   //     ctx.body = {}
-//   //   } catch (err) {
-//   //     throw err
-//   //   }
-//   // }
-//   // friendSay: async (ctx) => {
-//   //   try {
-//   //     const contact = await bot.Contact.find({ id: ctx.request.body.id })
-//   //     await contact.say(ctx.request.body.content)
-//   //     ctx.body = {}
-//   //   } catch (err) { throw err }
-//   // },
-//   // roomSay: async (ctx) => {
-//   //   try {
-//   //     const room = await bot.Room.find({ id: ctx.request.body.id })
-//   //     await room.say(ctx.request.body.content)
-//   //     ctx.body = {}
-//   //   } catch (err) { throw err }
-//   // },
 //   // getRoom: async (ctx) => {
 //   //   try {
 //   //     const room = await bot.Room.find({ id: ctx.params.id })

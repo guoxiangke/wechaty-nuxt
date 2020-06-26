@@ -5,17 +5,14 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
+// import { log } from 'brolog'
 
 // import winston from 'winston'
-
-// import { unprotectedRouter } from './routes/unprotectedRoutes'
-// import { protectedRouter } from './routes/protectedRoutes'
 
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
 const app = new Koa()
-
 // 注册路由
 // function useRouter() {
 //   // app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
