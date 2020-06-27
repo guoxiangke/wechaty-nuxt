@@ -1,8 +1,7 @@
 import { Contact, Wechaty } from 'wechaty'
 import { log } from 'brolog'
-import { Bot } from '../../models'
 
-async function onLogin(wechaty: Wechaty, bot: Bot) {
+function onLogin(wechaty: Wechaty) {
   // const wechaty = this
   // await wechaty.say(`robot.startSay`)
 
@@ -12,13 +11,10 @@ async function onLogin(wechaty: Wechaty, bot: Bot) {
   // log.info(`bot id: ${user.id}`)
 
   const contact: Contact = wechaty.userSelf()
-  bot.status = true
-  bot.bind = contact.id
-  await bot.save()
 
   // log & test
   log.info(`Bot Login: ${contact}`)
-  return { isLogin: true }
+  return { success: true }
 }
 
 // module.exports = onLogin

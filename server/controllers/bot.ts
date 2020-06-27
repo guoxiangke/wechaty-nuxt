@@ -14,13 +14,18 @@ export default class BotController {
     if (!bot.token) throw new Error('缺少协议token')
 
     // 如果已经登录，不再重复登录！
-    let result: any = {}
-    if (bot.status) {
-      result = { isLogin: 'already' }
-      log.error('already', Global.getWechaty(bot))
-    } else {
+    let result: any
+    if (!Global.getWechaty(bot)) {
       const webot = new Wechat(bot)
       result = await webot.start()
+      // {"qrcode":"http://weixin.qq.com/x/Ifj3ZIn5AkXnSMGSAPvu"}
+      // { success: true } // {"isLogin":true}
+      if ('qrcode' in result) {
+        // QR on.scan
+        log.error('BotController:onScan.qrcode', JSON.stringify(result))
+        ctx.body = result
+        return
+      }
       // 缓存到内存中，
       const wechaty: Wechaty | null = webot.wechaty
       if (!wechaty) throw new Error('should have wechaty')
@@ -28,9 +33,16 @@ export default class BotController {
       const tmp: any = Global.wechaty ? Global.wechaty : [] // 保留旧数据
       tmp[bot.id] = wechaty // 添加新的
       Global.wechaty = tmp // 缓存成功，Global.getWechaty(bot)获取
+
+      // DB
+      bot.status = true
+      const contact: Contact = wechaty.userSelf()
+      bot.bind = contact.id
+      await bot.save()
+    } else {
+      // result = { isLogin: 'already' }
+      log.info('BotController:login', 'already')
     }
-    // const result = {"qrcode":"http://weixin.qq.com/x/Ifj3ZIn5AkXnSMGSAPvu"}
-    // { isLogin: true }
     ctx.body = result
   }
 
@@ -41,9 +53,25 @@ export default class BotController {
     if (!bot) throw new Error('机器人不存在')
     if (!bot.token) throw new Error('缺少协议token')
 
-    const wechaty = Global.getWechaty(bot)
-    await wechaty.stop()
-    ctx.body = { isLogin: false }
+    const wechaty: Wechaty | null = Global.getWechaty(bot)
+    if (wechaty) {
+      await wechaty.stop()
+      log.info('BotController:logout', 'stoped wechaty')
+    } else {
+      log.info('BotController:logout', 'already destroyed')
+      // throw new Error('no wechay to call on logout')
+    }
+
+    // DB
+    bot.status = false
+    await bot.save()
+    // 清空全局缓存
+    if (Global.wechaty && bot.id in Global.wechaty) {
+      delete Global.wechaty[bot.id]
+      log.info('BotController:logout', 'deleted Global.wechaty[bot.id]')
+    }
+
+    ctx.body = { success: true }
   }
 
   public static async roomSay(ctx: Koa.Context): Promise<void> {
@@ -54,6 +82,7 @@ export default class BotController {
     if (!bot.token) throw new Error('缺少协议token')
 
     const wechaty = Global.getWechaty(bot)
+    if (!wechaty) throw new Error('no wechay to call on roomSay')
 
     const room: Room | null = await wechaty.Room.find({
       id: ctx.params.room_id
@@ -71,6 +100,7 @@ export default class BotController {
     if (!bot.token) throw new Error('缺少协议token')
 
     const wechaty = Global.getWechaty(bot)
+    if (!wechaty) throw new Error('no wechay to call on friendSay')
 
     const contact: Contact | null = await wechaty.Contact.find({
       id: ctx.params.contact_id

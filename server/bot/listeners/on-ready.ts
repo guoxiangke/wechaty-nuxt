@@ -12,9 +12,10 @@ import { initSchedule } from '../helper/initSchedule'
 // Module '"./listeners/on-ready"' declares 'onReady' locally, but it is not exported.ts(2459)
 // on-ready.ts(13, 16): 'onReady' is declared here.
 export { onReady }
-async function onReady(wechaty: Wechaty, bot: Bot) {
-  // const wechaty = this
-
+async function onReady(this: Wechaty) {
+  // wechaty: Wechaty, bot: Bot
+  const wechaty = this
+  const bot: Bot = await Global.getBot(wechaty)
   const allRooms = await wechaty.Room.findAll()
   Global.allRooms = allRooms
 

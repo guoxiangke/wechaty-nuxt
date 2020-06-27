@@ -32,7 +32,10 @@ async function onMessage(this: Wechaty, msg: Message) {
   const bot: Bot | null = await getBot(wechaty)
   if (!bot) throw new Error('no bot!')
   const sender: Contact | null = msg.from()
-  if (!sender) throw new Error('no sender!')
+  if (!sender) {
+    log.info('onMessage', 'no sender msg!')
+    return
+  }
 
   const text = msg.text().trim()
   const room = msg.room()
