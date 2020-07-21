@@ -1,9 +1,11 @@
+import consola from 'consola'
+consola.log('hi from file with .ts extension')
 export default function Svc(socket: any, io: any) {
-  console.log(socket, io, 'svc')
+  consola.log(socket, io, 'svc')
   return Object.freeze({
     getMessage(data: any) {
       return new Promise((resolve, reject) => {
-        console.log(reject)
+        consola.log(reject)
         const msgs = [
           'Hi, this is a chat message from IO server!',
           'Hi, this is another chat message from IO server!'
@@ -20,7 +22,7 @@ export default function Svc(socket: any, io: any) {
     },
     getMessage2(data: any) {
       return new Promise((resolve, reject) => {
-        console.log(reject)
+        consola.log(reject)
         const msgs = [
           'Hi, this is a chat message from IO server!',
           'Hi, this is another chat message from IO server!'

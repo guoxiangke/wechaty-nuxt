@@ -1,4 +1,5 @@
 import consola from 'consola'
+consola.log('hi from file with .ts extension')
 export default function Svc(socket: any, io: any) {
   consola.log('echoHello', io)
   return Object.freeze({

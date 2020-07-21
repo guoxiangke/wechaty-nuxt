@@ -49,14 +49,17 @@ module.exports = {
     '@nuxtjs/dotenv'
   ],
   io: {
-    server: {
-      ioSvc: './server/io/index.ts' // so I think if you specified with the ".ts" extension, it would work
-    },
+    // RES: not work of setting server option
+    // server: {
+    //   ioSvc: './server/io/index.ts'
+    // },
+
     // module options https://nuxt-socket-io.netlify.app/configuration
     sockets: [
       {
         name: 'main',
         url: 'http://127.0.0.1:3000',
+        // RES: if I use next url setting, the demo works very well
         // url: 'https://nuxt-socket-io.herokuapp.com',
         default: true,
         vuex: {
