@@ -3,7 +3,7 @@ import Router from '@koa/router'
 // import { Wechat } from '../bot'
 // import { Bot } from '../models/Bot'
 
-import { BotController } from '../controllers'
+import { BotController as Controller } from '../controllers'
 
 // const router = new Router()
 // router.prefix('/api/bot')
@@ -11,7 +11,8 @@ const router = new Router({
   prefix: '/api/bots'
 })
 
-router.get('/:id/login', BotController.login)
-router.get('/:id/logout', BotController.logout)
+router.get('/:id/login', Controller.login)
+router.get('/:id/logout', Controller.logout)
 
+router.post('/:id/send', Controller.send)
 export default router

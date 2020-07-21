@@ -1,3 +1,4 @@
+// import io from 'io.config' // import IO options
 module.exports = {
   mode: 'universal',
   /*
@@ -23,11 +24,11 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['assets/css/main.css'],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['@/plugins/axios'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -42,14 +43,76 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    // Doc: https://nuxt-socket-io.netlify.app/
+    'nuxt-socket-io',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv'
   ],
+  io: {
+    server: {
+      ioSvc: './server/io/index.ts' // so I think if you specified with the ".ts" extension, it would work
+    },
+    // module options https://nuxt-socket-io.netlify.app/configuration
+    sockets: [
+      {
+        name: 'main',
+        url: 'http://127.0.0.1:3000',
+        // url: 'https://nuxt-socket-io.herokuapp.com',
+        default: true,
+        vuex: {
+          mutations: [{ progress: 'examples/SET_PROGRESS' }],
+          actions: [{ chatMessage: 'FORMAT_MESSAGE' }],
+          emitBacks: [
+            // 'examples/someObj',
+            // 'examples/sample',
+            // { 'examples/sample2': 'sample2' }
+            // 'titleFromUser'
+          ]
+        }
+      }
+    ]
+    // sockets: [
+    //   {
+    //     name: 'home',
+    //     url:
+    //       process.env.NODE_ENV === 'production'
+    //         ? 'https://nuxt-socket-io.herokuapp.com'
+    //         : 'http://localhost:3000',
+    //     vuex: {
+    //       mutations: [{ progress: 'examples/SET_PROGRESS' }],
+    //       actions: [{ chatMessage: 'FORMAT_MESSAGE' }],
+    //       emitBacks: [
+    //         'examples/someObj',
+    //         'examples/sample',
+    //         { 'examples/sample2': 'sample2' },
+    //         'titleFromUser'
+    //       ]
+    //     },
+    //     namespaces: {
+    //       '/index': {
+    //         emitters: ['getMessage2 + testMsg --> message2Rxd'],
+    //         listeners: ['chatMessage2', 'chatMessage3 --> message3Rxd']
+    //       },
+    //       '/examples': {
+    //         emitBacks: ['sample3', 'sample4 <-- myObj.sample4'],
+    //         emitters: [
+    //           'reset] getProgress + refreshInfo --> progress [handleDone'
+    //         ],
+    //         listeners: ['progress']
+    //       }
+    //     }
+    //   }
+    // ]
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    proxy: true, // 表示开启代理
+    prefix: '/api', // 表示给请求url加个前缀 /api
+    credentials: true // 表示跨域请求时是否需要使用凭证
+  },
   /*
    ** Build configuration
    */
@@ -57,6 +120,6 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    // extend(config, ctx) {}
   }
 }

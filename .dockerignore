@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+
+/docs
+/files
+/screenshot
+*.memory-card.json
+/server/models/imports/*.json
+/server/database/db.sqlite
+/server

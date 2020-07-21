@@ -57,9 +57,6 @@ async function start() {
     host = process.env.HOST || '127.0.0.1',
     port = process.env.PORT || 3000
   } = nuxt.options.server
-
-  await nuxt.ready()
-
   // 使用中间件
   // Provides important security headers to make your app more secure
   app.use(helmet())
@@ -84,12 +81,6 @@ async function start() {
   // These routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
   // app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
 
-  // Build in development
-  if (config.dev) {
-    const builder = new Builder(nuxt)
-    await builder.build()
-  }
-
   app.use((ctx: any) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
@@ -97,23 +88,21 @@ async function start() {
     nuxt.render(ctx.req, ctx.res)
   })
 
-  app.listen(port, host)
+  await app.listen(port, host)
+  consola.log('nuxt server listening', nuxt.server.options.server)
+  // Build in development
+  if (config.dev) {
+    const builder = new Builder(nuxt)
+    await builder.build()
+  } else {
+    await nuxt.ready()
+  }
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
 }
 
-// // 获取数据连接和初始化方法
-// const { connect, initSchema } = require('./database')
-//   // 立即执行函数，连接数据库
-;(async () => {
-  // const connection = await getConnectionManager().get()
-  // const connection = await createConnection()
-  // connection.name = 'default'
-  // isConnected - 指示是否建立了与数据库的真实连接。
-  // await connect()
-  // initSchema()
-})()
-
-start()
+if (require.main === module) {
+  start()
+}

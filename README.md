@@ -5,6 +5,8 @@
 
 基于 nuxt, wechaty 开发的个人微信号机器人 UI 平台 @see https://github.com/beclass/wxbot.git
 
+https://wechaty.js.org/v/zh/api/
+
 > Typescript Version of UI bot
 
 ## Get Started

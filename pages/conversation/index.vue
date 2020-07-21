@@ -1,0 +1,196 @@
+<template id="product-list">
+  <section class="grid grid-cols-4" style="height: 100vh;">
+    <div class="col-span-1 contacts" style="overflow-y: scroll;">
+      <section class="grid grid-cols-1 gap-4">
+        <ListRooms :rooms="filteredRooms" />
+        <ListContacts :contacts="filteredContacts" />
+      </section>
+    </div>
+    <div class="col-span-2 conversations">
+      <MsgList />
+      <div class="test">
+        <textarea
+          id="textarea"
+          v-model="messageRxd"
+          type="textarea"
+          name="t1"
+        ></textarea>
+        <textarea
+          id="textarea"
+          v-model="chatMessages"
+          type="textarea"
+          name="t2"
+        ></textarea>
+      </div>
+      <div class="intercom-conversation-footer">
+        <textarea
+          id="textarea"
+          v-model="newMessage"
+          type="textarea"
+          name="message"
+          placeholder="发布消息..."
+          @keyup.enter="sendMsg"
+        ></textarea>
+
+        <div class="mt-4">
+          <button
+            class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
+            @click="getMessage()"
+          >
+            Message
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-1 infos invisible lg:invisible xl:visible">
+      <RightInfo :rooms="filteredRooms" />
+    </div>
+  </section>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import ListRooms from './ListRooms'
+import ListContacts from './ListContacts'
+import RightInfo from './RightInfo'
+import MsgList from './MsgList'
+
+export default {
+  components: {
+    ListRooms,
+    ListContacts,
+    MsgList,
+    RightInfo
+  },
+  async asyncData(context) {
+    // Get first page! https://blog.csdn.net/Tomwildboar/article/details/95928616
+    const uri = '/conversation/1' // + context.page
+    const res = await context.$axios.get(uri)
+    console.log('asyncData', `get ${res} data, ${uri}`)
+    return { contacts: res.contacts, rooms: res.rooms }
+  },
+  data() {
+    return {
+      contacts: [],
+      rooms: [],
+      filters: '',
+      newMessage: '',
+      messageRxd: 'xxx',
+      current: {
+        type: 'contact',
+        index: 1
+      }
+    }
+  },
+  computed: {
+    ...mapState(['chatMessages']),
+    filteredContacts() {
+      const self = this
+
+      // self.contacts.sort(function(p1, p2) {
+      //   return p2.id - p1.id
+      // })
+      // console.log(self.lists.length, self.filters)
+      if (!self.filters) {
+        return self.contacts
+      }
+      return self.contacts.filter(function(contact) {
+        return contact.name.includes(self.filters)
+      })
+    },
+    filteredRooms() {
+      const self = this
+
+      // self.contacts.sort(function(p1, p2) {
+      //   return p2.id - p1.id
+      // })
+      if (!self.filters) {
+        return self.rooms
+      }
+      return self.rooms.filter(function(contact) {
+        return contact.name.includes(self.filters)
+      })
+    },
+    page() {
+      return this.$route.query.page
+    }
+  },
+  async created() {
+    // await this.getList()
+  },
+  mounted() {
+    this.socket = this.$nuxtSocket({ channel: '/', reconnection: false })
+    // /* Listen for events: */
+    // this.socket.on('someEvent', (msg, cb) => {
+    //   /* Handle event */
+    //   console.log(msg, cb)
+    // })
+  },
+  methods: {
+    activeChat($e) {
+      console.log($e.target.dataset.type, $e.target.dataset.index)
+      const current = {
+        type: $e.target.dataset.type,
+        index: $e.target.dataset.index
+      }
+      this.current = current // attributes.data('type')
+    },
+    getMessage() {
+      // return new Promise((resolve) => {
+      this.socket.emit('getMessage', { id: 'abc123' }, (resp) => {
+        this.messageRxd = resp
+        // resolve()
+      })
+      // })
+    },
+    method1() {
+      /* Emit events */
+      this.socket.emit(
+        'method1',
+        {
+          hello: 'world'
+        },
+        (resp) => {
+          /* Handle response, if any */
+          console.log(resp)
+        }
+      )
+    },
+    async sendMsg(data) {
+      const res = await this.$axios.$post('/friend/1/say', data)
+      if (res) {
+        // this.$notification.success({
+        //   message: '操作提示',
+        //   description: '消息发送成功'
+        // })
+        // this.$refs.modalDom.isShow(false)
+      }
+    }
+  }
+}
+</script>
+
+<style>
+.logo {
+  width: 50px;
+  float: left;
+  margin-right: 15px;
+}
+
+.form-group {
+  max-width: 500px;
+}
+
+.actions {
+  padding: 10px 0;
+}
+
+.glyphicon-euro {
+  font-size: 12px;
+}
+#textarea {
+  padding: 1em;
+  width: 100%;
+  background-color: aliceblue;
+}
+</style>

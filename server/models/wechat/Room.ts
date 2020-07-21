@@ -12,6 +12,7 @@ export class Room extends Model {
   public announce!: string | null // room.announce([text]) ⇒ Promise <void | string>
   public ownerId!: string // room.owner() ⇒ Contact | null  => Contact.id
   public config!: any // json config: { logMsg: true, autoReply: false }
+  public avatar!: string | null // room.avatar()
 
   public alias!: string // 自动入群暗号别名
   public autoJoin!: boolean // 入群管理
@@ -32,6 +33,9 @@ Room.init(
     },
     announce: {
       type: DataTypes.STRING()
+    },
+    avatar: {
+      type: DataTypes.STRING
     },
     alias: {
       type: DataTypes.STRING(64)

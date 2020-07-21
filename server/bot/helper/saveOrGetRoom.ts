@@ -1,4 +1,5 @@
 import { Contact, Room, log } from 'wechaty'
+import { FileBoxType } from 'file-box'
 import { Contact as ContactModel, Room as RoomModel, Bot } from '../../models'
 import { Type } from '../../models/wechat/Contact'
 import { saveRoomMember } from './saveRoomMember'
@@ -22,6 +23,13 @@ export async function saveOrGetRoom(bot: Bot, room: Room) {
     autoJoin = true
   }
 
+  const avatar = await room.avatar()
+  const type = avatar.boxType
+  let avatarUrl = null
+  if (type === FileBoxType.Url) {
+    avatarUrl = (avatar as any).remoteUrl
+  }
+
   const [roomInstance, created] = await RoomModel.findOrCreate({
     where: { roomId: room.id, botId: bot.id },
     defaults: {
@@ -29,6 +37,7 @@ export async function saveOrGetRoom(bot: Bot, room: Room) {
       announce: await room.announce(),
       ownerId: contact.id,
       autoJoin,
+      avatar: avatarUrl,
       config: { logMsg: true, autoReply: false }
     }
   })

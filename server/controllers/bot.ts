@@ -74,39 +74,36 @@ export default class BotController {
     ctx.body = { success: true }
   }
 
-  public static async roomSay(ctx: Koa.Context): Promise<void> {
+  // POST /api/bots/1/send
+  // body:{id:xxx@room/wxid, content:{type:text, data:'hello,text!'}}
+  // 主动发送 消息给 联系人/群
+  public static async send(ctx: Koa.Context): Promise<void> {
     if (!ctx.params.id) throw new Error('缺少id')
-    const id = ctx.params.id
+    const id: string = ctx.params.id
     const bot: Bot | null = await Bot.findByPk(id)
     if (!bot) throw new Error('机器人不存在')
     if (!bot.token) throw new Error('缺少协议token')
 
     const wechaty = Global.getWechaty(bot)
-    if (!wechaty) throw new Error('no wechay to call on roomSay')
+    if (!wechaty) throw new Error('no wechay to call on Say')
 
-    const room: Room | null = await wechaty.Room.find({
-      id: ctx.params.room_id
-    })
-    if (!room) throw new Error('should have contact to say')
-    await room.say(ctx.request.body.content)
-    ctx.body = {}
-  }
+    // room or contact?
+    log.error(`${ctx.request.body}, ${ctx.params} `)
+    const sayContent = ctx.request.body.content.data
+    const idd = ctx.request.body.id // room_id or contact_id
+    // idd:string = 2017353977@chatroom | wxid_p8049l6lj3ea22
 
-  public static async friendSay(ctx: Koa.Context): Promise<void> {
-    if (!ctx.params.id) throw new Error('缺少id')
-    const id = ctx.params.id
-    const bot: Bot | null = await Bot.findByPk(id)
-    if (!bot) throw new Error('机器人不存在')
-    if (!bot.token) throw new Error('缺少协议token')
-
-    const wechaty = Global.getWechaty(bot)
-    if (!wechaty) throw new Error('no wechay to call on friendSay')
-
-    const contact: Contact | null = await wechaty.Contact.find({
-      id: ctx.params.contact_id
-    })
-    if (!contact) throw new Error('should have contact to say')
-    await contact.say(ctx.request.body.content)
+    if (id.includes('@chatroom')) {
+      const room: Room | null = await wechaty.Room.find({
+        topic: idd
+      })
+      if (!room) throw new Error('should have contact to say')
+      await room.say(sayContent)
+    } else {
+      const contact: Contact | null = await wechaty.Contact.load(idd)
+      if (!contact) throw new Error('should have contact to say')
+      await contact.say(sayContent)
+    }
     ctx.body = {}
   }
 }

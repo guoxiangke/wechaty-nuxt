@@ -1,0 +1,24 @@
+version: '3'
+services:
+  app:
+    image: guoxiangke/nuxt-chat
+    build:
+      context: .
+      dockerfile: 'Dockerfile'
+    restart: unless-stopped
+    ports:
+      - '3001:3000'
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./.env:/usr/src/app/.env
+      # Uncomment 4 Dev
+      # 把./bot排除在外，这样，每次修改代码，不用重复构建镜像，直接使用cache
+      - ./1.memory-card.json:/usr/src/app/1.memory-card.json
+      - ./server:/usr/src/app/server
+      #   - ./server/database/db.sqlite:/usr/src/app/server/database/db.sqlite
+      #   - ./server/models/imports:/usr/src/app/server/models/imports
+      - ./files:/usr/src/app/files
+      # - ./package.json:/usr/src/app/package.json
+      # Uncomment on Local
+      # - ../../../Downloads/Share/19_Psalm:/usr/src/app/files/19_Psalm # 4dev resources(mp3) for one cron task

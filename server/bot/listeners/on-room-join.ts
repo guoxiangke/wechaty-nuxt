@@ -21,6 +21,7 @@ async function onRoomJoin(
 
   // 如果机器人被拉到一个新的群组里, inviteeList[0] === wechay.self()
   const aBot: ContactSelf = wechay.userSelf()
+  if (!aBot) throw new Error('!aBot at onRoomJoin line 24')
   if (inviteeList[0].id === aBot.id) {
     await room.say('新人报道[转圈]，多多关照[抱拳]')
     // 群主肯定不是bot的群

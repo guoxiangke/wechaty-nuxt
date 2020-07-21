@@ -1,5 +1,6 @@
 // DOC @see https://www.jianshu.com/p/0738e29d8af3
-const Sequelize = require('sequelize')
+import { Sequelize } from 'sequelize'
+// const Sequelize = require('sequelize')
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   // todo storage path keep same as config.json

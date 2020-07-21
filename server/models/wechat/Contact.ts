@@ -4,10 +4,10 @@ import { sequelize as db } from '../../database/config'
 
 export enum Type {
   Unknown = 0,
-  Official, // 1. 公号
-  Individual, // 2. bot个人联系人 //Personal
-  RoomMemeber, // 3. 群成员联系人
-  RoomOwner // 4 群主
+  RoomOwner, // 4=>1 群主
+  Individual, // 2=>2. bot个人联系人 //Personal
+  RoomMemeber, // 3=>4. 群成员联系人
+  Official // 1=>4. 公号
 }
 
 export class Contact extends Model {
@@ -22,12 +22,14 @@ export class Contact extends Model {
   public wechatId!: string // Get Contact id. This function is depending on the Puppet Implementation, see puppet-compatible-table
   public name!: string
   public alias!: string | null // contact.alias(newAlias) ⇒ Promise <null | string | void>
-  public gender!: string // ContactGender.Unknown | ContactGender.Male | ContactGender.Female
+  public gender!: number // ContactGender.Unknown | ContactGender.Male | ContactGender.Female
   public province!: string | null
   public city!: string | null
   public avatar!: string | null // contact.avatar() ⇒ Promise <FileBox>
 
   public botId!: number
+  public weight!: number // 星标/vip/排序显示 contact.start()
+  public tags!: any // | null // any
 }
 
 Contact.init(
@@ -64,8 +66,14 @@ Contact.init(
     },
     from: {
       type: new DataTypes.TINYINT(),
-      defaultValue: Type.Unknown,
-      allowNull: false
+      defaultValue: Type.Unknown
+    },
+    weight: {
+      type: new DataTypes.TINYINT(),
+      defaultValue: 0
+    },
+    tags: {
+      type: DataTypes.JSON
     },
     botId: {
       type: DataTypes.BIGINT.UNSIGNED,
