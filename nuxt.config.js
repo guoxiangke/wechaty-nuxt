@@ -33,6 +33,7 @@ module.exports = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    // DOC https://typescript.nuxtjs.org/guide/setup.html#configuration
     '@nuxt/typescript-build',
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
     '@nuxtjs/tailwindcss'
@@ -48,6 +49,7 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv'
   ],
+  components: true, // https://id.nuxtjs.org/blog/improve-your-developer-experience-with-nuxt-components/
   io: {
     // RES: not work of setting server option
     // server: {
@@ -58,7 +60,7 @@ module.exports = {
     sockets: [
       {
         name: 'main',
-        url: 'http://127.0.0.1:3000',
+        url: 'http://localhost:3001',
         // RES: if I use next url setting, the demo works very well
         // url: 'https://nuxt-socket-io.herokuapp.com',
         default: true,

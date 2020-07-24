@@ -12,7 +12,6 @@ export default class BotController {
     const bot: Bot | null = await Bot.findByPk(id)
     if (!bot) throw new Error('机器人不存在')
     if (!bot.token) throw new Error('缺少协议token')
-
     // 如果已经登录，不再重复登录！
     let result: any
     if (!Global.getWechaty(bot)) {
@@ -40,6 +39,13 @@ export default class BotController {
       bot.bind = contact.id
       await bot.save()
     } else {
+      console.log('ctx', [ctx.socket.on])
+      // const socket: any = ctx.socket
+      ctx.socket.on('connection', async (socket: any) => {
+        const res = await socket.broadcast.emit('chatMessage', 'hi so.emit')
+        console.log('ctx', [ctx.socket, res])
+      })
+
       // result = { isLogin: 'already' }
       log.info('BotController:login', 'already')
     }
@@ -75,7 +81,8 @@ export default class BotController {
   }
 
   // POST /api/bots/1/send
-  // body:{id:xxx@room/wxid, content:{type:text, data:'hello,text!'}}
+  // body: {"id":"", "content":{"type":"text", "data":"hello,text!"}}
+  // idd:string = 2017353977@chatroom | wxid_p8049l6lj3ea22 // room_id or contact_id
   // 主动发送 消息给 联系人/群
   public static async send(ctx: Koa.Context): Promise<void> {
     if (!ctx.params.id) throw new Error('缺少id')
@@ -87,12 +94,9 @@ export default class BotController {
     const wechaty = Global.getWechaty(bot)
     if (!wechaty) throw new Error('no wechay to call on Say')
 
-    // room or contact?
-    log.error(`${ctx.request.body}, ${ctx.params} `)
     const sayContent = ctx.request.body.content.data
-    const idd = ctx.request.body.id // room_id or contact_id
-    // idd:string = 2017353977@chatroom | wxid_p8049l6lj3ea22
-
+    const idd = ctx.request.body.id
+    // room or contact?
     if (id.includes('@chatroom')) {
       const room: Room | null = await wechaty.Room.find({
         topic: idd

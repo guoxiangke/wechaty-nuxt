@@ -35,7 +35,7 @@
         <div class="mt-4">
           <button
             class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
-            @click="getMessage()"
+            @click="getMessage"
           >
             Message
           </button>
@@ -119,12 +119,16 @@ export default {
     // await this.getList()
   },
   mounted() {
-    this.socket = this.$nuxtSocket({ channel: '/', reconnection: false })
+    this.socket = this.$nuxtSocket({
+      channel: '/conversation',
+      reconnection: false,
+      persist: 'ConversationSocket'
+    })
     // /* Listen for events: */
-    // this.socket.on('someEvent', (msg, cb) => {
-    //   /* Handle event */
-    //   console.log(msg, cb)
-    // })
+    this.socket.on('chatMessage', (msg, cb) => {
+      /* Handle event */
+      console.log(msg, cb)
+    })
   },
   methods: {
     activeChat($e) {
@@ -141,20 +145,8 @@ export default {
         this.messageRxd = resp
         // resolve()
       })
+      this.socket.emit('broadcastMsg')
       // })
-    },
-    method1() {
-      /* Emit events */
-      this.socket.emit(
-        'method1',
-        {
-          hello: 'world'
-        },
-        (resp) => {
-          /* Handle response, if any */
-          console.log(resp)
-        }
-      )
     },
     async sendMsg(data) {
       const res = await this.$axios.$post('/friend/1/say', data)

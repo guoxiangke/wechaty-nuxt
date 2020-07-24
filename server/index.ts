@@ -5,12 +5,16 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
+// @ts-ignore
+import { Nuxt, Builder } from 'nuxt'
+const consola = require('consola')
+
+// const { Nuxt, Builder } = require('nuxt')
+// Doc: https://www.npmjs.com/package/consola
+// import Consola from 'consola' // todo
 // import { log } from 'brolog'
 
 // import winston from 'winston'
-
-const consola = require('consola')
-const { Nuxt, Builder } = require('nuxt')
 
 const app = new Koa()
 // 注册路由
@@ -81,6 +85,7 @@ async function start() {
   // These routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
   // app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
 
+  // Koa.Context
   app.use((ctx: any) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
@@ -89,7 +94,33 @@ async function start() {
   })
 
   await app.listen(port, host)
-  consola.log('nuxt server listening', nuxt.server.options.server)
+  // Doc: https://github.com/richardeschloss/nuxt-socket-io/issues/124
+  // todo nuxt koa socket.io all in 3000
+  await nuxt.listen('3001')
+
+  // https://github.com/koajs/koa/issues/1041#issuecomment-344318977
+  // const server = http.createServer(app.callback())
+  // const ioo = require('socket.io')
+  // const io = ioo(server)
+  // server.listen('3001')
+
+  // io.on('connection', (socket: any) => {
+  //   console.log('a user connected', socket)
+  //   socket.on('click', (data: any) => {
+  //     // process the data here
+  //     console.log('client clicked! data:')
+  //     console.log(data)
+
+  //     // emit an event
+  //     console.log('responding with news')
+  //     socket.emit('news', { hello: 'world' })
+  //   })
+  // })
+
+  // consola.info('Nuxt server info', )
+  // Global.socket = nuxt.server.listeners.app
+  console.log('Global.socket104', nuxt.server.options.io)
+  console.log('Global.socket123', nuxt.server.listeners[0].app)
   // Build in development
   if (config.dev) {
     const builder = new Builder(nuxt)

@@ -4,6 +4,8 @@ import { Bot } from './models'
 export class Vars {
   public declare static wechaty: Array<Wechaty>
 
+  public declare static io: any
+
   /**
    * function getWechaty
    * 要保证存在再调用！
