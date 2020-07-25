@@ -4,6 +4,7 @@ import { MessageType } from 'wechaty-puppet'
 import { Type as ContactModelType } from '../../models/wechat/Contact'
 
 import { Message as MsgModel, Bot } from '../../models'
+import { Vars as Globals } from '../../global-var'
 import { saveOrGetContact } from './saveOrGetContact'
 import { saveMsgFile } from './saveMsgFile'
 import { xmlToJson } from './xmlToJson'
@@ -95,7 +96,7 @@ export async function saveMsg(msg: Message, bot: Bot) {
   // 数据库中找到该记录，并更新正确的 类型（如果fromType不对的话）。
   const contactModel = await saveOrGetContact(bot, sender, fromType)
 
-  await MsgModel.create({
+  const res: MsgModel = await MsgModel.create({
     botId: bot.id,
     msgId: msg.id,
     fromId: contactModel.id,
@@ -103,4 +104,8 @@ export async function saveMsg(msg: Message, bot: Bot) {
     type,
     content: { data: content }
   })
+
+  // broadcast in controller
+  // ctx.socket.emit('broadcastEmit', '1000') // NOT WORK !!!
+  Globals.io.socket.sockets.emit('newMsgEmit', res) // WORK !!!
 }

@@ -7,21 +7,13 @@
       </section>
     </div>
     <div class="col-span-2 conversations">
+      <p v-if="isConnected">We're connected to the server!</p>
+      <p>Message from server: "{{ socketMessage }}"</p>
+      <button @click="pingServer()">Ping Server</button>
+
+      <button @click="clickButton">ping</button>
+
       <MsgList />
-      <div class="test">
-        <textarea
-          id="textarea"
-          v-model="messageRxd"
-          type="textarea"
-          name="t1"
-        ></textarea>
-        <textarea
-          id="textarea"
-          v-model="chatMessages"
-          type="textarea"
-          name="t2"
-        ></textarea>
-      </div>
       <div class="intercom-conversation-footer">
         <textarea
           id="textarea"
@@ -49,7 +41,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import ListRooms from './ListRooms'
 import ListContacts from './ListContacts'
 import RightInfo from './RightInfo'
@@ -71,6 +63,8 @@ export default {
   },
   data() {
     return {
+      isConnected: false,
+      socketMessage: '',
       contacts: [],
       rooms: [],
       filters: '',
@@ -83,7 +77,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['chatMessages']),
+    // ...mapState(['chatMessages']),
     filteredContacts() {
       const self = this
 
@@ -118,19 +112,36 @@ export default {
   async created() {
     // await this.getList()
   },
-  mounted() {
-    this.socket = this.$nuxtSocket({
-      channel: '/conversation',
-      reconnection: false,
-      persist: 'ConversationSocket'
-    })
-    // /* Listen for events: */
-    this.socket.on('chatMessage', (msg, cb) => {
-      /* Handle event */
-      console.log(msg, cb)
-    })
+  mounted() {},
+  sockets: {
+    connect() {
+      // Fired when the socket connects.
+      this.isConnected = true
+    },
+
+    disconnect() {
+      this.isConnected = false
+    },
+
+    // Fired when the server sends something on the "messageChannel" channel.
+    messageChannel(data) {
+      this.socketMessage = data
+    },
+    // broadcast
+    newMsgEmit(data) {
+      this.socketMessage = data
+      console.log('get a broadcastEmit: newMsgEmit', data)
+    }
   },
   methods: {
+    pingServer() {
+      // Send the "pingServer" event to the server.
+      this.$socket.client.emit('pingServer', 'PING!')
+    },
+    clickButton() {
+      console.log('clickButton', 'emit_ping')
+      this.$socket.client.emit('emit_ping', { data: 'ping' })
+    },
     activeChat($e) {
       console.log($e.target.dataset.type, $e.target.dataset.index)
       const current = {
@@ -140,13 +151,13 @@ export default {
       this.current = current // attributes.data('type')
     },
     getMessage() {
-      // return new Promise((resolve) => {
-      this.socket.emit('getMessage', { id: 'abc123' }, (resp) => {
-        this.messageRxd = resp
-        // resolve()
-      })
-      this.socket.emit('broadcastMsg')
+      // // return new Promise((resolve) => {
+      // this.socket.emit('getMessage', { id: 'abc123' }, (resp) => {
+      //   this.messageRxd = resp
+      //   // resolve()
       // })
+      // this.socket.emit('broadcastMsg')
+      // // })
     },
     async sendMsg(data) {
       const res = await this.$axios.$post('/friend/1/say', data)

@@ -39,13 +39,6 @@ export default class BotController {
       bot.bind = contact.id
       await bot.save()
     } else {
-      console.log('ctx', [ctx.socket.on])
-      // const socket: any = ctx.socket
-      ctx.socket.on('connection', async (socket: any) => {
-        const res = await socket.broadcast.emit('chatMessage', 'hi so.emit')
-        console.log('ctx', [ctx.socket, res])
-      })
-
       // result = { isLogin: 'already' }
       log.info('BotController:login', 'already')
     }

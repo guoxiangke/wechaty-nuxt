@@ -7,6 +7,7 @@ import helmet from 'koa-helmet'
 import cors from '@koa/cors'
 // @ts-ignore
 import { Nuxt, Builder } from 'nuxt'
+import { Vars as Global } from './global-var'
 const consola = require('consola')
 
 // const { Nuxt, Builder } = require('nuxt')
@@ -93,34 +94,37 @@ async function start() {
     nuxt.render(ctx.req, ctx.res)
   })
 
+  // Server DOC: https://github.com/ambelovsky/koa-socket-2
+  // Client DOC: https://github.com/probil/vue-socket.io-extended
+  const IO = require('koa-socket-2')
+  const io = new IO()
+  io.attach(app)
+
+  // https://stackoverflow.com/questions/6849599/how-to-broadcast-when-out-of-socket-io-loop
+  // setInterval(() => {
+  //   io.socket.sockets.emit('broadcastEmit', '1000')
+  // }, 1000)
+  // consola.log(io.socket.sockets)
+  Global.io = io
+
+  // broadcast in controller
+  // ctx.socket.emit('broadcastEmit', '1000') // NOT WORK !!!
+  // Global.io.socket.sockets.emit('broadcastEmit', '1000') // WORK !!!
+
+  // DOC https://blog.csdn.net/nathanhuang1220/article/details/41348213
+  io.on('connection', (socket: any) => {
+    consola.log('a user connected', socket.id)
+    socket.on('disconnect', () => {
+      consola.log('user disconnected', socket.id)
+    })
+    socket.on('emit_ping', (ctx: any) => {
+      consola.log('get ctx.data', ctx.data)
+      socket.broadcast.emit('broadcastEmit', 'from server broadcast')
+      socket.emit('messageChannel', 'pong')
+    })
+  })
+
   await app.listen(port, host)
-  // Doc: https://github.com/richardeschloss/nuxt-socket-io/issues/124
-  // todo nuxt koa socket.io all in 3000
-  await nuxt.listen('3001')
-
-  // https://github.com/koajs/koa/issues/1041#issuecomment-344318977
-  // const server = http.createServer(app.callback())
-  // const ioo = require('socket.io')
-  // const io = ioo(server)
-  // server.listen('3001')
-
-  // io.on('connection', (socket: any) => {
-  //   console.log('a user connected', socket)
-  //   socket.on('click', (data: any) => {
-  //     // process the data here
-  //     console.log('client clicked! data:')
-  //     console.log(data)
-
-  //     // emit an event
-  //     console.log('responding with news')
-  //     socket.emit('news', { hello: 'world' })
-  //   })
-  // })
-
-  // consola.info('Nuxt server info', )
-  // Global.socket = nuxt.server.listeners.app
-  console.log('Global.socket104', nuxt.server.options.io)
-  console.log('Global.socket123', nuxt.server.listeners[0].app)
   // Build in development
   if (config.dev) {
     const builder = new Builder(nuxt)
