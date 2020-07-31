@@ -1,55 +1,30 @@
 <template id="product-list">
   <section class="grid grid-cols-4" style="height: 100vh;">
-    <div class="col-span-1 contacts" style="overflow-y: scroll;">
-      <section class="grid grid-cols-1 gap-4">
-        <RoomsList :rooms="filteredRooms" />
-        <ContactsList :contacts="filteredContacts" />
-      </section>
-    </div>
-    <div class="col-span-2 conversations">
-      <MsgList />
+    <p v-if="isConnected">We're connected to the server!</p>
+    <p>Message from server: "{{ socketMessage }}"</p>
+    <button @click="pingServer()">Ping Server</button>
 
-      <MsgSend />
-    </div>
-    <div class="col-span-1 infos invisible lg:invisible xl:visible">
-      <RightInfo
-        :rooms="filteredRooms"
-        :connected="isConnected"
-        :logged="isBotLogin"
-      />
-    </div>
+    <button @click="clickButton">ping</button>
   </section>
 </template>
 
 <script>
 // import { mapState } from 'vuex'
-import RoomsList from './RoomsList'
-import ContactsList from './ContactsList'
-import RightInfo from './RightInfo'
-import MsgList from './MsgList'
-import MsgSend from './MsgSend'
 
 export default {
-  components: {
-    RoomsList,
-    ContactsList,
-    MsgList,
-    RightInfo,
-    MsgSend
-  },
   async asyncData(context) {
     // Get first page! https://blog.csdn.net/Tomwildboar/article/details/95928616
-    const uri = '/bots/1/login' // + context.page
+    const uri = '/conversation/1' // + context.page
     const res = await context.$axios.get(uri)
-    return { isBotLogin: res.success }
+    return { contacts: res.contacts, rooms: res.rooms }
   },
   data() {
     return {
-      isBotLogin: false,
       isConnected: false,
-      contacts: [],
-      rooms: [],
-      filters: ''
+      socketMessage: '',
+      filters: '',
+      newMessage: '',
+      messageRxd: 'xxx'
     }
   },
   computed: {
@@ -85,7 +60,9 @@ export default {
       return this.$route.query.page
     }
   },
-  created() {},
+  async created() {
+    // await this.getList()
+  },
   mounted() {},
   sockets: {
     connect() {
@@ -97,19 +74,43 @@ export default {
       this.isConnected = false
     },
 
+    // Fired when the server sends something on the "messageChannel" channel.
+    messageChannel(data) {
+      this.socketMessage = data
+    },
     // broadcast
-    newMsgEmit(message) {
-      this.$store.commit('messages/ADD', message)
-      // 如果新到消息在某个active会话，则加入到 conversation 数据里
-      if (this.$store.state.contacts.contact.wechatId === message.to) {
-        this.$store.commit('conversation/ADD', message)
-      } else {
-        // 未读消息 +1
-        this.$store.commit('contacts/INCREAE_UNREAD', message.fromId)
-      }
+    newMsgEmit(data) {
+      this.socketMessage = data
+      this.$store.commit('messages/ADD', data)
     }
   },
-  methods: {}
+  methods: {
+    pingServer() {
+      // Send the "pingServer" event to the server.
+      this.$socket.client.emit('pingServer', 'PING!')
+    },
+    clickButton() {
+      console.log('clickButton', 'emit_ping')
+      this.$socket.client.emit('emit_ping', { data: 'ping' })
+    },
+    activeChat($e) {
+      console.log($e.target.dataset.type, $e.target.dataset.index)
+      const current = {
+        type: $e.target.dataset.type,
+        index: $e.target.dataset.index
+      }
+      this.current = current // attributes.data('type')
+    },
+    getMessage() {
+      // // return new Promise((resolve) => {
+      // this.socket.emit('getMessage', { id: 'abc123' }, (resp) => {
+      //   this.messageRxd = resp
+      //   // resolve()
+      // })
+      // this.socket.emit('broadcastMsg')
+      // // })
+    }
+  }
 }
 </script>
 

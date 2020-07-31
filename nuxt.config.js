@@ -1,6 +1,7 @@
 // import io from 'io.config' // import IO options
 module.exports = {
   mode: 'universal',
+  telemetry: false, // https://github.com/nuxt/telemetry
   /*
    ** Headers of the page
    */

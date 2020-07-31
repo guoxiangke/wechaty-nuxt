@@ -1,11 +1,13 @@
 import * as Koa from 'koa'
-import { Wechaty, Contact, Room } from 'wechaty'
+import { Wechaty, Contact } from 'wechaty'
 import { log } from 'brolog'
 import { Wechat } from '../bot'
-import { Bot } from '../models'
+import { say } from '../bot/helper/say'
+import { Message as MsgModel, Bot } from '../models'
 import { Vars as Global } from '../global-var'
 
 export default class BotController {
+  // status: isLoging...
   public static async login(ctx: Koa.Context): Promise<void> {
     if (!ctx.params.id) throw new Error('缺少id')
     const id = ctx.params.id
@@ -39,7 +41,7 @@ export default class BotController {
       bot.bind = contact.id
       await bot.save()
     } else {
-      // result = { isLogin: 'already' }
+      result = { success: 'true' }
       log.info('BotController:login', 'already')
     }
     ctx.body = result
@@ -77,7 +79,7 @@ export default class BotController {
   // body: {"id":"", "content":{"type":"text", "data":"hello,text!"}}
   // idd:string = 2017353977@chatroom | wxid_p8049l6lj3ea22 // room_id or contact_id
   // 主动发送 消息给 联系人/群
-  public static async send(ctx: Koa.Context): Promise<void> {
+  public static async send(ctx: Koa.Context) {
     if (!ctx.params.id) throw new Error('缺少id')
     const id: string = ctx.params.id
     const bot: Bot | null = await Bot.findByPk(id)
@@ -87,21 +89,13 @@ export default class BotController {
     const wechaty = Global.getWechaty(bot)
     if (!wechaty) throw new Error('no wechay to call on Say')
 
-    const sayContent = ctx.request.body.content.data
-    const idd = ctx.request.body.id
-    // room or contact?
-    if (id.includes('@chatroom')) {
-      const room: Room | null = await wechaty.Room.find({
-        topic: idd
-      })
-      if (!room) throw new Error('should have contact to say')
-      await room.say(sayContent)
-    } else {
-      const contact: Contact | null = await wechaty.Contact.load(idd)
-      if (!contact) throw new Error('should have contact to say')
-      await contact.say(sayContent)
-    }
-    ctx.body = {}
+    const content = ctx.request.body.content.data
+    const to = ctx.request.body.id
+
+    // todo
+    const kfId: any = 1
+    const res: MsgModel = await say(to, content, bot, kfId)
+    ctx.body = { success: res.msgId }
   }
 }
 // module.exports = {

@@ -9,6 +9,20 @@ https://wechaty.js.org/v/zh/api/
 
 > Typescript Version of UI bot
 
+## Todo
+
+http://localhost:3000/conversation
+
+- [ ] Last Reader/ Last Reader At by conversation/contact.
+- [ ] 给谁发消息后 last message，谁应该在 list 上面（类似于 star 星标）
+- [ ] Koa login jwt
+      https://www.jianshu.com/p/8237b4e1cf60
+      https://segmentfault.com/a/1190000017379244
+- [ ] onLogout 退出
+- [ ] 入群管理 begin
+- [ ] 踢群
+- [ ] botUser 回复内容给 群/好友 记录到数据库 bot.say(wechaty, receiver, content{type:'',data:''})
+
 ## Get Started
 
 - 1. npm install
@@ -84,13 +98,6 @@ https://wechaty.js.org/v/zh/api/
 - [x] 消息存储到 DB
   - [x] room.config.logMsg = true
   - [x] files 存储到 files/msg/ 并 md5 去重
-
-## Todo
-
-- [ ] onLogout 退出
-- [ ] 入群管理 begin
-- [ ] 踢群
-- [ ] botUser 回复内容给 群/好友 记录到数据库 bot.say(wechaty, receiver, content{type:'',data:''})
 
 ## Build Setup (Nuxt)
 

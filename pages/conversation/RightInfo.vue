@@ -1,6 +1,8 @@
 <template>
   <div class="main">
     <div class="title"><p class="text-xl">more-info</p></div>
+    <p v-if="connected">已成功链接消息服务器! green</p>
+    <p v-if="logged">客服机器人🤖️已登录 green/red</p>
     <div v-for="room in rooms" :key="room.id" :data-toid="room.room_id">
       <div
         class="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden"
@@ -22,7 +24,12 @@
 export default {
   name: 'RightInfo',
   props: {
-    rooms: Array
+    rooms: Array,
+    connected: Boolean,
+    logged: false
+  },
+  data() {
+    return {}
   }
 }
 </script>

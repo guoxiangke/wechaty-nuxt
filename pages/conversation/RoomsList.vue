@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'ListRooms',
+  name: 'RoomsList',
   props: {
     rooms: Array
   },

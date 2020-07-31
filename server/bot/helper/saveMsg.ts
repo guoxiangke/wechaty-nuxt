@@ -14,24 +14,33 @@ import { xmlToJson } from './xmlToJson'
  * @param msg
  * @param bot
  */
-export async function saveMsg(msg: Message, bot: Bot) {
+export async function saveMsg(
+  msg: Message,
+  bot: Bot,
+  kfId = null
+): Promise<MsgModel | any> {
   const sender: Contact | null = msg.from()
   if (!sender) throw new Error('no sender!')
+  // 获取消息发送的联系人。在微信群中，Message.to() 会返回null，使用Message.room()获取微信群信息。
+  // 上面👆文档解释错误🙅‍♂️！ to()始终有值！ 2020.6.23
+  const to = msg.to()
+  if (!to) throw new Error('no to!')
 
   let content: any // 要保存到数据库中的内容，默认为 msg.text()
   content = msg.text()
   const room = msg.room()
   const type: number = msg.type()
 
-  // 获取消息发送的联系人。在微信群中，Message.to() 会返回null，使用Message.room()获取微信群信息。
-  // 上面👆文档解释错误🙅‍♂️！ to()始终有值！ 2020.6.23
-  const from = msg.from()
   let toId: string
   if (room) {
     toId = room.id
+  } else if (sender.id === bot.bind) {
+    // bot 主动发送的消息的用户 wechatId
+    // 如果是bot主动发送的消息， sender = self
+    toId = to.id
   } else {
-    if (!from) throw new Error('Must be a to!')
-    toId = from.id
+    // 默认，bot 被动接收消息时，消息来源者
+    toId = sender.id
   }
 
   let next: boolean = true
@@ -97,6 +106,7 @@ export async function saveMsg(msg: Message, bot: Bot) {
   const contactModel = await saveOrGetContact(bot, sender, fromType)
 
   const res: MsgModel = await MsgModel.create({
+    kfId,
     botId: bot.id,
     msgId: msg.id,
     fromId: contactModel.id,
@@ -105,7 +115,9 @@ export async function saveMsg(msg: Message, bot: Bot) {
     content: { data: content }
   })
 
+  contactModel.unreadCount += 1
   // broadcast in controller
   // ctx.socket.emit('broadcastEmit', '1000') // NOT WORK !!!
   Globals.io.socket.sockets.emit('newMsgEmit', res) // WORK !!!
+  return res
 }

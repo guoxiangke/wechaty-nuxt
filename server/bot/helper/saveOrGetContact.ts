@@ -3,11 +3,7 @@ import { FileBoxType } from 'file-box'
 import { Contact as ContactInstance, Bot } from '../../models'
 import { Type } from '../../models/wechat/Contact'
 
-export async function saveOrGetContact(
-  bot: Bot,
-  contact: Contact,
-  fromType: Type = Type.Unknown
-) {
+export async function saveOrGetContact(bot: Bot, contact: Contact, from: Type) {
   let contactInstance = await ContactInstance.findOne({
     where: { wechatId: contact.id }
   })
@@ -27,14 +23,15 @@ export async function saveOrGetContact(
   // log.error(JSON.stringify(tags))
   // 06:05:31 ERR [{"domain":null,"_events":{},"_eventsCount":0,"id":"i看电影会员"}]
 
+  if (contact.type() === Contact.Type.Official) {
+    from = Type.Official
+  }
+
   if (!contactInstance) {
-    if (contact.type() === Contact.Type.Official) {
-      fromType = Type.Official
-    }
     contactInstance = await ContactInstance.create({
       botId: bot.id,
       type: contact.type(),
-      fromType,
+      from,
 
       wechatId: contact.id,
       name: contact.name(),
@@ -47,10 +44,12 @@ export async function saveOrGetContact(
       weight
     })
   } else {
-    // eslint-disable-next-line no-lonely-if
-    if (Type.Unknown !== fromType) {
-      contactInstance.from = fromType
-    }
+    // 再次更新 from.
+    contactInstance.from = from
+    // // 如果是群主
+    // if (contactInstance.from === Type.RoomOwner) {
+    // }
+
     // 更新微信可以更改的资料
     contactInstance.name = contact.name()
     contactInstance.alias = await contact.alias()

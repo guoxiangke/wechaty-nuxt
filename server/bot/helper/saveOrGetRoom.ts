@@ -16,6 +16,7 @@ export async function saveOrGetRoom(bot: Bot, room: Room) {
     Type.RoomOwner
   )
   if (!contact) throw new Error('没有保存群主')
+  log.info('群主', [room, owner, contact.id])
 
   // 如果是群主，则可以自动入群
   let autoJoin: boolean = false
@@ -46,6 +47,6 @@ export async function saveOrGetRoom(bot: Bot, room: Room) {
   if (created) log.silly('新建了一个群')
 
   await saveRoomMember(bot, roomInstance.id, room)
-  log.verbose('RoomInited', `${room}, '${contact.wechatId}'=>${contact.name}`)
+  log.info('RoomInited', `${room}, '${contact.wechatId}'=>${contact.name}`)
   return roomInstance
 }

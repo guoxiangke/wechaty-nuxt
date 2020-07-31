@@ -19,7 +19,7 @@ async function onReady(this: Wechaty) {
   const allRooms = await wechaty.Room.findAll()
   Global.allRooms = allRooms
 
-  // 关键词入群，按群名/配置
+  // 关键词入群，按群名/配置 覆盖上面的 群联系人 类型
   // 缓存(自动入群配置)到全局变量，不再每次查询数据库
   const tmp: Array<string> = []
   for (const room of allRooms) {
@@ -31,9 +31,11 @@ async function onReady(this: Wechaty) {
   Global.autoJoinRooms = tmp
   log.info('onReady', `Bot Room inited: ${allRooms.length}`)
 
-  // 包含 群联系人+个人联系人+？部分公众号联系人
+  // https://github.com/wechaty/wechaty/issues/1320
+  // 包含 群联系人+个人联系人+ "部分公众号联系人!"
   const allContacts: Contact[] | null = await wechaty.Contact.findAll()
-  for (const contact of allContacts) {
+  const friendList = allContacts.filter((contact) => !!contact.friend())
+  for (const contact of friendList) {
     await saveOrGetContact(bot, contact, Type.Individual)
   }
   log.info('onReady', `Bot Contact Inited: ${allContacts.length}`)

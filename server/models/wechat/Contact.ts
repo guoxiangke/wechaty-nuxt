@@ -4,10 +4,10 @@ import { sequelize as db } from '../../database/config'
 
 export enum Type {
   Unknown = 0,
-  RoomOwner, // 4=>1 群主
-  Individual, // 2=>2. bot个人联系人 //Personal
-  RoomMemeber, // 3=>4. 群成员联系人
-  Official // 1=>4. 公号
+  Individual, // 1. bot个人联系人 //Personal
+  RoomMemeber, // 2. 群成员联系人
+  RoomOwner, // 3. 群主
+  Official // 4. 公号
 }
 
 export class Contact extends Model {
@@ -30,6 +30,7 @@ export class Contact extends Model {
   public botId!: number
   public weight!: number // 星标/vip/排序显示 contact.start()
   public tags!: any // | null // any
+  public unreadCount!: number // 每收到一个消息，count+1
 }
 
 Contact.init(
@@ -78,6 +79,10 @@ Contact.init(
     botId: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: false
+    },
+    unreadCount: {
+      type: new DataTypes.TINYINT(),
+      defaultValue: 0
     }
   },
   {

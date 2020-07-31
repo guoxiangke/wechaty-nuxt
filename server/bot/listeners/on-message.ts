@@ -21,13 +21,13 @@ module.exports = onMessage
 async function onMessage(this: Wechaty, msg: Message) {
   const wechaty: Wechaty = this
   // console.log(this)
-  if (msg.age() > 300) {
-    log.warn(
-      'onMessage',
-      'Message discarded because its TOO OLD(than 5 minute)'
-    )
-    return
-  }
+  // if (msg.age() > 300) {
+  //   log.warn(
+  //     'onMessage',
+  //     'Message discarded because its TOO OLD(than 5 minute)'
+  //   )
+  //   return
+  // }
   log.info('onMessage', `${msg}`)
   const bot: Bot | null = await getBot(wechaty)
   if (!bot) throw new Error('no bot!')
@@ -38,7 +38,7 @@ async function onMessage(this: Wechaty, msg: Message) {
   }
 
   const text = msg.text().trim()
-  const room = msg.room()
+  const room: Room | null = msg.room()
   const type: number = msg.type()
   // todo Recalled 不支持转发，无法撤回
   if (type === MessageType.Recalled) {
@@ -51,8 +51,6 @@ async function onMessage(this: Wechaty, msg: Message) {
   if (!msgSenderAlias) {
     msgSenderAlias = await sender.name()
   }
-
-  // todo 指定公众号消息的第X条消息转发到指定群里
 
   // 处理群消息
   if (room) {
@@ -133,6 +131,20 @@ async function onMessage(this: Wechaty, msg: Message) {
     // bot 主动发消息到群，没有msg.to()
     const receiver: Contact | null = msg.to()
     if (!receiver) throw new Error('!receiver')
+
+    // forward begin 个人转发 配置
+    // 转发与 isReplied 无关
+    const forwards = await ForwardModel.findAll({
+      where: { isRoom: false }
+    })
+    for (const forward of forwards) {
+      const destinations = forward.destinations.data
+      if (msgSenderAlias === forward.from) {
+        forwardMsg(destinations, msg, wechaty)
+      }
+    }
+    // forward end
+
     // let aiReply = false
     // 自己发给filehelper
     if (receiver.id === 'filehelper') {
@@ -155,6 +167,11 @@ async function onMessage(this: Wechaty, msg: Message) {
 
     // 除了给filehelper和自己发之外的 所有自己发的消息，不再继续处理，到此为止
     // if (msg.self()) return
+    // 自己发给自己的消息  自保存记录，不再继续处理
+    if (receiver.id === sender.id) {
+      dbSave(bot, msg, room)
+      return
+    }
 
     // 匹配用户发的消息开始
     // 完全匹配模式的关键词回复配置 autoReply.json
@@ -245,25 +262,17 @@ async function onMessage(this: Wechaty, msg: Message) {
       }
     }
 
-    // forward begin 个人转发 配置
-    // 转发与 isReplied 无关
-    const forwards = await ForwardModel.findAll({
-      where: { isRoom: false }
-    })
-    for (const forward of forwards) {
-      const destinations = forward.destinations.data
-      if (msgSenderAlias === forward.from) {
-        forwardMsg(destinations, msg, wechaty)
-      }
-    }
-    // forward end
-
     if (!isReplied && bot.config.autoReply) {
       await sender.say(await getDefaultReply())
     }
   }
 
   // save msg in db begin
+  dbSave(bot, msg, room)
+  // save msg in db end
+}
+
+async function dbSave(bot: Bot, msg: Message, room: Room | null) {
   // 只保存个人聊天记录 和 配置的群 config: { logMsg: true, autoReply: false }
   let isNeedSave = false
   if (!room) {
@@ -278,5 +287,4 @@ async function onMessage(this: Wechaty, msg: Message) {
   if (isNeedSave) {
     await saveMsg(msg, bot)
   }
-  // save msg in db end
 }

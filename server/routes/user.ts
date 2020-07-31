@@ -9,26 +9,16 @@ const router = new Router({
   prefix: '/api/users'
 })
 
-// const routerOpts: Router.IRouterOptions = {
-//   prefix: '/api/users'
-// }
-
-// const router: Router = new Router(routerOpts)
-
-// router.prefix('/api/bot')
-
 // https://github.com/koajs/router/blob/master/API.md
+
+// 'GET ALL'
 router.get('/', async (ctx: Koa.Context) => {
-  const users = await User.findByPk(1)
-  console.log('users', users)
-  // ctx.body = users
-  ctx.body = 'GET ALL'
+  ctx.body = await User.findByPk(1)
 })
 
+// 'GET SINGLE'
 router.get('/:id', async (ctx: Koa.Context) => {
-  const user = await User.findByPk(ctx.params.id)
-  console.log('user', user, ctx.params.id)
-  ctx.body = 'GET SINGLE'
+  ctx.body = await User.findByPk(ctx.params.id)
 })
 
 router.post('/', async (ctx: Koa.Context) => {
