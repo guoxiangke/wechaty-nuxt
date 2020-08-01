@@ -46,7 +46,7 @@ Task.init(
     config: {
       // The DataTypes.JSON data type is only supported for SQLite, MySQL, MariaDB and PostgreSQL. However, there is a minimum support for MSSQL (see below).
       type: DataTypes.JSON,
-      unique: true,
+      defaultValue: {},
       allowNull: true
     }
   },

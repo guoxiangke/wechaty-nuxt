@@ -1,24 +1,15 @@
 <template>
-  <div class="intercom-conversation-footer">
+  <div v-if="!isDisabled">
     <textarea
       id="textarea"
       v-model="newMessage"
       type="textarea"
       name="message"
-      placeholder="发布消息..."
+      placeholder="回车发布消息..."
       :disabled="isDisabled"
+      class="bg-aliceblue focus:bg-white focus:border-gray-300 placeholder-gray-600 duration-100 ease-in-out focus:outline-none border border-transparent "
       @keyup.enter="sendMsg"
     ></textarea>
-
-    <div class="mt-4">
-      <button
-        class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
-        :disabled="isDisabled"
-        @click="sendMsg"
-      >
-        发送
-      </button>
-    </div>
   </div>
 </template>
 
@@ -33,7 +24,7 @@ export default {
   computed: {
     isDisabled() {
       // var isMyObjectEmpty = !Object.keys(myObject).length;
-      return !Object.keys(this.$store.state.contacts.contact).length
+      return !Object.keys(this.$store.state.contacts.current).length
     }
   },
   methods: {
@@ -44,7 +35,7 @@ export default {
         return
       }
       const body = {
-        id: this.$store.state.contacts.contact.wechatId, // 'bluesky_still', // 获取当前的wechatID
+        id: this.$store.state.contacts.current.wechatId, // 'bluesky_still', // 获取当前的wechatID
         content: {
           type: 'text',
           data: this.newMessage
@@ -54,10 +45,15 @@ export default {
       const res = await this.$axios.$post('/bots/1/send', body)
       this.newMessage = ''
       // todo if(!res)  alert('消息发送失败')
-      console.log('res of send always false: todo', res)
+      console.log('res of send always： false: todo', res)
     }
   }
 }
 </script>
 
-<style></style>
+<style scoped>
+#textarea {
+  padding: 1em;
+  width: 100%;
+}
+</style>

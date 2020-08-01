@@ -1,12 +1,10 @@
 import { MessageType } from 'wechaty-puppet'
 import dotenv from 'dotenv'
 import { sequelize as db } from '../../database/config'
-import { Contact, Message, Member, Room, Task, Bot, User } from '../index'
+import { Task, Bot, User } from '../index'
 import { AutoReply } from '../AutoReply'
 import { AutoForward } from '../AutoForward'
 import { Subscription } from '../Subscription'
-
-console.log(Contact, Message, Room, Member)
 
 dotenv.config()
 const token = process.env.WECHATY_PUPPET_PADPLUS_TOKEN || 'UniqueToken'
@@ -31,7 +29,6 @@ db.sync({ force: false })
     user.loginAt = new Date()
     user.botId = 1
     await user.save()
-    console.log(user.toJSON())
   })
   .then(() => {
     const data = require(`./task.json`).data

@@ -1,16 +1,5 @@
 <template>
   <div class="warpper">
-    <input
-      id="search"
-      v-model="filters"
-      class="transition-colors duration-100 ease-in-out focus:outline-none border border-transparent focus:bg-white focus:border-gray-300 placeholder-gray-600 rounded-lg bg-gray-200 py-2 pr-4 pl-10 block w-full appearance-none leading-normal ds-input"
-      type="text"
-      placeholder="Search"
-      autocomplete="off"
-      spellcheck="false"
-      role="combobox"
-      style="position: relative; vertical-align: top;"
-    />
     <div v-for="contact in contacts" :key="contact.id">
       <ContactItem :contact="contact" />
     </div>
@@ -23,11 +12,6 @@ import ContactItem from './ContactItem'
 export default {
   name: 'ContactsList',
   components: { ContactItem },
-  data() {
-    return {
-      filters: ''
-    }
-  },
   computed: {
     contacts() {
       const latestMsgs = this.$store.state.messages.list
@@ -77,6 +61,9 @@ export default {
     },
     test() {
       return 'getter'
+    },
+    filters() {
+      return this.$store.state.search.keyword
     }
   },
   created() {

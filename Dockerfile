@@ -24,5 +24,8 @@ RUN set -ex; \
 RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 RUN cnpm install
 
+# nuxt build for production
+RUN npm run build
+
 EXPOSE 3000
 CMD [ "npm", "start" ]

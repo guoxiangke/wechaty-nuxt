@@ -3,7 +3,7 @@ import { Bot } from './Bot'
 import { Contact } from './wechat/Contact'
 import { Member } from './wechat/Member'
 import { Room } from './wechat/Room'
-import { Message } from './wechat/Message'
+// import { Message } from './wechat/Message'
 import { Subscription } from './Subscription'
 import { Task } from './Task'
 
@@ -43,12 +43,13 @@ Bot.hasOne(User, { sourceKey: 'id' })
 // 每条消息 必须 属于 某一个 Contact (fromId)
 
 // fromId is contactId
-Contact.hasMany(Message, {
-  foreignKey: 'fromId'
-})
-Message.belongsTo(Contact, {
-  foreignKey: 'fromId'
-})
+// Contact.hasMany(Message, {
+//   foreignKey: 'fromId'
+// })
+
+// Message.belongsTo(Contact, {
+//   foreignKey: 'fromId'
+// })
 
 //
 Task.hasMany(Subscription, {
@@ -57,11 +58,13 @@ Task.hasMany(Subscription, {
 Subscription.belongsTo(Task)
 
 // roomOwner
-Contact.hasMany(Room, {
-  as: 'owner',
-  foreignKey: 'ownerId'
-})
-Room.belongsTo(Contact)
+// Contact.hasMany(Room, {
+//   as: 'owner',
+//   foreignKey: 'ownerId'
+// })
+// Room.belongsTo(Contact, {
+//   foreignKey: 'ownerId'
+// })
 
 // Member
 // Contact HasMany Room 1个用户可以在多个群里

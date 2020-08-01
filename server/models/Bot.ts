@@ -37,6 +37,7 @@ Bot.init(
     },
     config: {
       type: DataTypes.JSON,
+      defaultValue: {},
       allowNull: true
     },
     status: {

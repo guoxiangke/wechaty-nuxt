@@ -21,6 +21,7 @@ AutoReply.init(
     },
     reply: {
       type: DataTypes.JSON,
+      defaultValue: {},
       allowNull: false
     }
   },

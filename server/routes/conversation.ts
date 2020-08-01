@@ -15,6 +15,9 @@ router.get('/:bot_id', Controller.list)
 router.get('/:bot_id/messages', Controller.getMessages)
 router.get('/:bot_id/messages/:to', Controller.getMessagesByTo)
 router.get('/:bot_id/contacts', Controller.getAllContacts)
+router.get('/:bot_id/rooms', Controller.getAllRooms)
+
+// /conversation/1/rooms
 
 // router.get('/:bot_id/:to', Controller.show)
 

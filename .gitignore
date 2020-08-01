@@ -95,3 +95,4 @@ sw.*
 *.memory-card.json
 /server/models/imports/*.json
 /server/database/db.sqlite
+server/database/data

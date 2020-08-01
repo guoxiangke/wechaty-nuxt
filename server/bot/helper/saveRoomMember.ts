@@ -1,4 +1,4 @@
-import { Contact, Room, log } from 'wechaty'
+import { Contact, Room } from 'wechaty'
 import { Member as MemberModel, Bot } from '../../models'
 import { Type } from '../../models/wechat/Contact'
 import { saveOrGetContact } from './saveOrGetContact'

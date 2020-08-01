@@ -13,6 +13,13 @@ https://wechaty.js.org/v/zh/api/
 
 http://localhost:3000/conversation
 
+- [ ] 消息类型展示-图片
+- [ ] 消息类型展示-语音
+- [ ] 消息类型展示-语音转文字
+- [ ] 消息操作-快捷回复
+- [ ] 消息操作-回复图片
+- [ ] 消息操作-回复录音
+- [ ] 联系人展示-群组
 - [ ] Last Reader/ Last Reader At by conversation/contact.
 - [ ] 给谁发消息后 last message，谁应该在 list 上面（类似于 star 星标）
 - [ ] Koa login jwt
@@ -30,6 +37,10 @@ http://localhost:3000/conversation
 - 3. cp ./server/models/imports/\*.example cp ./server/models/imports/\*
 - 4. ts-node server/models/imports/init.ts && npm run dev
 - 5. curl http://127.0.0.1:3000/api/bots/1/login
+
+## Deploy
+
+/usr/src/app/node_modules/.bin/ts-node
 
 ## Documents
 

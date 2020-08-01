@@ -74,6 +74,7 @@ Contact.init(
       defaultValue: 0
     },
     tags: {
+      defaultValue: {},
       type: DataTypes.JSON
     },
     botId: {

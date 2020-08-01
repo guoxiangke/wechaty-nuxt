@@ -10,7 +10,7 @@ export class Room extends Model {
   public roomId!: string
   public topic!: string // room.topic([newTopic]) ⇒ Promise <void | string>
   public announce!: string | null // room.announce([text]) ⇒ Promise <void | string>
-  public ownerId!: string // room.owner() ⇒ Contact | null  => Contact.id
+  public ownerId!: number // room.owner() ⇒ Contact | null  => Contact.id
   public config!: any // json config: { logMsg: true, autoReply: false }
   public avatar!: string | null // room.avatar()
 
@@ -49,6 +49,7 @@ Room.init(
       allowNull: false
     },
     config: {
+      defaultValue: {},
       type: DataTypes.JSON
     },
     botId: {

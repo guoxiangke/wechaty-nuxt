@@ -7,9 +7,11 @@ services:
       dockerfile: 'Dockerfile'
     restart: unless-stopped
     ports:
-      - '3001:3000'
+      - '3000:3000'
     environment:
       - TZ=Asia/Shanghai
+    links:
+      - db:mysql
     volumes:
       - ./.env:/usr/src/app/.env
       # Uncomment 4 Dev
@@ -22,3 +24,18 @@ services:
       # - ./package.json:/usr/src/app/package.json
       # Uncomment on Local
       # - ../../../Downloads/Share/19_Psalm:/usr/src/app/files/19_Psalm # 4dev resources(mp3) for one cron task
+  #MySQL Service
+  db:
+    image: mysql:latest
+    command:
+      [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+        '--default-authentication-plugin=mysql_native_password',
+      ]
+    restart: unless-stopped
+    volumes:
+      - ./server/database/data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: nuxtchat
+      MYSQL_ROOT_PASSWORD: root

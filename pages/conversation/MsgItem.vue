@@ -1,7 +1,22 @@
 <template>
   <div class="warpper">
     <div :class="algin">
-      <p>{{ message.content.data }}</p>
+      <div class="intercom-comment-container">
+        <div class="intercom-comment-container-admin-avatar">
+          <div class="intercom-avatar">
+            <img :src="contact.avatar" :alt="contact.name" />
+          </div>
+        </div>
+        <div class="intercom-comment">
+          <div class="intercom-block-paragraph">
+            {{ message.content.data }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div :class="algin" class="intercom-conversation-part-metadata">
+      {{ contact.name }}
+      &nbsp;&nbsp; {{ message.created_at.substr(5, 11).replace('T', ' ') }}
     </div>
   </div>
 </template>
@@ -9,99 +24,115 @@
 <script>
 export default {
   name: 'MsgItem',
-  props: { message: Object },
-  computed: {
-    algin() {
-      return this.message.kfId ? 'bubble-right' : 'bubble-left'
+  props: {
+    message: Object,
+    contact: {
+      type: Object
     }
   },
-  mounted() {},
+  computed: {
+    algin() {
+      return this.message.kfId ? 'right flex flex-row-reverse' : 'left'
+    }
+  },
+  mounted() {
+    console.log(this.contact)
+  },
   methods: {}
 }
 </script>
 
 <style scoped>
-.bubble-dialog {
-  white-space: pre-line;
-  line-height: 0;
-}
+/* .li.right {
+  padding-right: 1em;
+  max-width: 80%;
+} */
 
-.bubble-left,
-.bubble-right {
-  line-height: 100%;
-  display: block;
+.intercom-comment-container {
+  padding-left: 40px;
   position: relative;
-  padding: 0.25em 0.5em;
-  background: pink;
-  border: red solid 3px;
-  -webkit-border-radius: 11px;
-  -moz-border-radius: 11px;
-  border-radius: 11px;
-  margin-bottom: 2em;
+  max-width: 85%;
+}
+.right .intercom-comment-container {
+  padding-left: 0px;
+  position: relative;
+  max-width: 85%;
+}
+
+.right .intercom-conversation-part-metadata {
+  padding-left: 0px;
   clear: both;
-  max-width: 50%;
+  color: #a8b6c2;
+  font-size: 10px;
+  padding-top: 5px;
+  text-align: right;
 }
-p {
-  margin-bottom: 0;
-  padding: 1em;
+.right .intercom-comment-container-admin-avatar {
+  display: none;
 }
-
-.bubble-left {
-  float: left;
-  margin-right: 10%;
-}
-.bubble-right {
-  float: right;
-  margin-left: 10%;
-}
-
-.bubble-left:after,
-.bubble-left:before,
-.bubble-right:after,
-.bubble-right:before {
-  content: '';
+.intercom-comment-container-admin-avatar {
   position: absolute;
-  top: 21px;
-  border-style: solid;
-  border-width: 13px 17px 13px 0;
-  border-color: transparent pink;
-  display: block;
-  width: 0;
+  left: 0;
+  bottom: 10px;
+}
+.intercom-comment {
+  color: #606273;
+  background-color: #eff3f6;
+  padding: 10px 15px;
+  border-radius: 4px;
+  width: fit-content;
+}
+.intercom-block-paragraph {
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.intercom-conversation-part-metadata {
+  padding-left: 40px;
+  clear: both;
+  color: #a8b6c2;
+  font-size: 10px;
+  padding-top: 5px;
+}
+.intercom-avatar {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 15px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.intercom-avatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
-.bubble-left:after,
-.bubble-left:before {
-  border-width: 13px 17px 13px 0;
-  border-color: transparent pink;
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+#online-avatar {
+  margin: 1rem 0 1rem 1rem;
+}
+.chat-profile {
+  width: 50px;
+}
+.right .intercom-comment-container {
+  padding: 0;
+  padding: none;
+  width: fit-content;
+  max-width: 100%;
 }
 
-.bubble-right:after,
-.bubble-right:before {
-  border-width: 13px 0 13px 17px;
-  border-color: transparent pink;
-}
-
-.bubble-left:after {
-  left: -16px;
-  border-color: transparent pink;
-  z-index: 1;
-}
-
-.bubble-left:before {
-  left: -19px;
-  border-color: transparent red;
-  z-index: 0;
-}
-
-.bubble-right:after {
-  right: -16px;
-  border-color: transparent pink;
-  z-index: 1;
-}
-
-.bubble-right:before {
-  right: -19px;
-  border-color: transparent red;
-  z-index: 0;
+.right .intercom-comment {
+  color: #fff;
+  background-color: #1f8ceb;
 }
 </style>

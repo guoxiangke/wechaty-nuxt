@@ -44,6 +44,7 @@ Message.init(
       defaultValue: MessageType.Unknown
     },
     content: {
+      defaultValue: {},
       type: DataTypes.JSON,
       allowNull: true
     },

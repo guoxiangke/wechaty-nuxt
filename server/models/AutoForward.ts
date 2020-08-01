@@ -51,10 +51,12 @@ AutoForward.init(
     },
     senders: {
       type: DataTypes.JSON,
+      defaultValue: {},
       allowNull: false
     },
     destinations: {
       type: DataTypes.JSON,
+      defaultValue: {},
       allowNull: false
     }
   },

@@ -132,16 +132,19 @@ export default class ConversationController {
           limit: 1000,
           where: {
             bot_id: botId,
-            from_id: fromId, // AND
+            // from_id 和 to 是AND关系
+            from_id: fromId,
             to
           }
         })
       } else {
         messages = await Message.findAll({
           // order: [['id', 'ASC']],
-          // limit: 1000,
+          // limit: 1000, // 获取所有的聊天记录
           where: {
             bot_id: botId,
+            to: { [Op.notLike]: '%chatroom' },
+            // from_id 和 to 是或的关系，一来一回，两轮消息
             [Op.or]: [{ to: { [Op.eq]: to } }, { from_id: { [Op.eq]: fromId } }]
           }
         })
@@ -177,6 +180,28 @@ export default class ConversationController {
       contactsObj[id] = e
     })
     ctx.body = contactsObj
+  }
+
+  public static async getAllRooms(ctx: Koa.Context): Promise<void> {
+    if (!ctx.params.bot_id) throw new Error('缺少bot_id')
+    const botId = ctx.params.bot_id
+    const bot: Bot | null = await Bot.findByPk(botId)
+    if (!bot) throw new Error('机器人不存在')
+    if (!bot.token) throw new Error('缺少协议token')
+
+    const rooms = await Room.findAll({
+      // order: [['id', 'ASC']],
+      where: {
+        bot_id: botId
+      }
+    })
+    // 转换成obj
+    const roomsObj: any = {}
+    rooms.forEach((e) => {
+      const id = e.id
+      roomsObj[id] = e
+    })
+    ctx.body = roomsObj
   }
 
   // 显示与某个人的会话消息

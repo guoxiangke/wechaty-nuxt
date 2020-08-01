@@ -10,7 +10,7 @@ export class Subscription extends Model {
   public taskId!: number
   public cron!: string // * * * * *
   public to!: string // json
-  public offset!: number
+  public offset!: string
 }
 
 Subscription.init(
@@ -25,10 +25,11 @@ Subscription.init(
     },
     to: {
       type: DataTypes.JSON,
+      defaultValue: {},
       allowNull: false
     },
     offset: {
-      type: DataTypes.NUMBER
+      type: DataTypes.STRING
     }
   },
   {

@@ -1,22 +1,22 @@
 <template id="product-list">
-  <section class="grid grid-cols-4" style="height: 100vh;">
+  <section
+    id="conversation-page"
+    class="grid grid-cols-4"
+    style="height: 100vh;"
+  >
     <div class="col-span-1 contacts" style="overflow-y: scroll;">
-      <section class="grid grid-cols-1 gap-4">
-        <RoomsList :rooms="filteredRooms" />
-        <ContactsList :contacts="filteredContacts" />
+      <section class="grid grid-cols-1 gap-4 p-4">
+        <Search />
+        <RoomsList />
+        <ContactsList />
       </section>
     </div>
     <div class="col-span-2 conversations">
       <MsgList />
-
       <MsgSend />
     </div>
     <div class="col-span-1 infos invisible lg:invisible xl:visible">
-      <RightInfo
-        :rooms="filteredRooms"
-        :connected="isConnected"
-        :logged="isBotLogin"
-      />
+      <RightInfo :connected="isConnected" :logged="isBotLogin" />
     </div>
   </section>
 </template>
@@ -28,9 +28,11 @@ import ContactsList from './ContactsList'
 import RightInfo from './RightInfo'
 import MsgList from './MsgList'
 import MsgSend from './MsgSend'
+import Search from './Search'
 
 export default {
   components: {
+    Search,
     RoomsList,
     ContactsList,
     MsgList,
@@ -48,39 +50,38 @@ export default {
       isBotLogin: false,
       isConnected: false,
       contacts: [],
-      rooms: [],
-      filters: ''
+      rooms: []
     }
   },
   computed: {
-    // ...mapState(['chatMessages']),
-    filteredContacts() {
-      const self = this
+    // // ...mapState(['chatMessages']),
+    // filteredContacts() {
+    //   const self = this
 
-      // self.contacts.sort(function(p1, p2) {
-      //   return p2.id - p1.id
-      // })
-      // console.log(self.lists.length, self.filters)
-      if (!self.filters) {
-        return self.contacts
-      }
-      return self.contacts.filter(function(contact) {
-        return contact.name.includes(self.filters)
-      })
-    },
-    filteredRooms() {
-      const self = this
+    //   // self.contacts.sort(function(p1, p2) {
+    //   //   return p2.id - p1.id
+    //   // })
+    //   // console.log(self.lists.length, self.filters)
+    //   if (!self.filters) {
+    //     return self.contacts
+    //   }
+    //   return self.contacts.filter(function(contact) {
+    //     return contact.name.includes(self.filters)
+    //   })
+    // },
+    // filteredRooms() {
+    //   const self = this
 
-      // self.contacts.sort(function(p1, p2) {
-      //   return p2.id - p1.id
-      // })
-      if (!self.filters) {
-        return self.rooms
-      }
-      return self.rooms.filter(function(contact) {
-        return contact.name.includes(self.filters)
-      })
-    },
+    //   // self.contacts.sort(function(p1, p2) {
+    //   //   return p2.id - p1.id
+    //   // })
+    //   if (!self.filters) {
+    //     return self.rooms
+    //   }
+    //   return self.rooms.filter(function(contact) {
+    //     return contact.name.includes(self.filters)
+    //   })
+    // },
     page() {
       return this.$route.query.page
     }
@@ -101,7 +102,7 @@ export default {
     newMsgEmit(message) {
       this.$store.commit('messages/ADD', message)
       // 如果新到消息在某个active会话，则加入到 conversation 数据里
-      if (this.$store.state.contacts.contact.wechatId === message.to) {
+      if (this.$store.state.contacts.current.wechatId === message.to) {
         this.$store.commit('conversation/ADD', message)
       } else {
         // 未读消息 +1
@@ -114,12 +115,16 @@ export default {
 </script>
 
 <style>
-.logo {
-  width: 50px;
-  float: left;
-  margin-right: 15px;
+.search {
+  margin: 0 1em;
+  width: 90%;
 }
-
+#conversation-page {
+  background-color: #abd9e9;
+}
+.bg-aliceblue {
+  background: #eff3f7;
+}
 .form-group {
   max-width: 500px;
 }
@@ -130,10 +135,5 @@ export default {
 
 .glyphicon-euro {
   font-size: 12px;
-}
-#textarea {
-  padding: 1em;
-  width: 100%;
-  background-color: aliceblue;
 }
 </style>

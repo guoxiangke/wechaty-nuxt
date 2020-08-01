@@ -1,20 +1,9 @@
-// DOC @see https://www.jianshu.com/p/0738e29d8af3
 import { Sequelize } from 'sequelize'
 // const Sequelize = require('sequelize')
-import dotenv from 'dotenv'
-dotenv.config()
-const isProduction = process.env.APP_ENV === 'production'
-
 const sequelize = new Sequelize({
-  // dialect: 'sqlite',
+  dialect: 'sqlite',
   // todo storage path keep same as config.json
-  // storage: './server/database/db.sqlite',
-
-  dialect: 'mysql',
-  database: 'nuxtchat',
-  username: 'root',
-  password: 'root',
-  host: isProduction ? 'mysql' : 'localhost',
+  storage: './server/database/db.sqlite',
   pool: {
     max: 5,
     min: 0,

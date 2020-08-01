@@ -5,7 +5,9 @@
         class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
         @click="isShow = !isShow"
       >
-        展开/折叠群
+        <span v-if="isShow"> 折叠</span>
+        <span v-else> 展开</span>
+        群
       </button>
     </div>
 
@@ -15,37 +17,76 @@
         v-show="isShow"
         :key="room.id"
         :data-toid="room.room_id"
-        @click="select"
       >
-        <div
-          class="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden"
-        >
-          <div class="sm:flex sm:items-center px-6 py-4">
-            <img
-              class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-12 rounded-full"
-              :src="room.avatar"
-              :alt="room.topic"
-            />
-            <div class="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-              <p class="text-base leading-tight">{{ room.topic }}</p>
-            </div>
-          </div>
-        </div>
+        <RoomItem :room="room" />
       </div>
     </transition-group>
   </div>
 </template>
 
 <script>
+import RoomItem from './RoomItem'
 export default {
   name: 'RoomsList',
-  props: {
-    rooms: Array
+  components: {
+    RoomItem
   },
   data() {
     return {
-      isShow: false
+      isShow: false,
+      filters: ''
     }
+  },
+  computed: {
+    rooms() {
+      const latestMsgs = this.$store.state.messages.list
+      const allRoomsObj = this.$store.state.rooms.list
+      // orderBy contact.weight
+      // 确保有值后再计算
+      console.log(Object.keys(allRoomsObj).length, 'allRoomsObj')
+      const roomsArray = []
+      const self = this
+      if (Object.keys(allRoomsObj).length && latestMsgs.length) {
+        // // 只含群消息 && ！机器人主动发送的信息
+        // // todo 24会变 / 机器人永远置顶，weight = 9999
+        // const filterMsgs = latestMsgs.filter(
+        //   (item) => item.to.includes('@chatroom') && item.fromId !== 24
+        // )
+        // // 需要清零weight，不然是累加了
+        // filterMsgs.forEach((msg) => {
+        //   if (allRoomsObj[msg.fromId]) {
+        //     this.$store.commit('rooms/RESET_WEIGHT', msg.fromId)
+        //   }
+        // })
+        // // change weight by messages!
+        // filterMsgs.forEach((msg) => {
+        //   if (allRoomsObj[msg.fromId]) {
+        //     this.$store.commit('rooms/INCREASE_WEIGHT', msg.fromId)
+        //   }
+        // })
+
+        Object.values(allRoomsObj).forEach((room) => {
+          roomsArray.push(room)
+        })
+        roomsArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+
+        return roomsArray.filter(function(room) {
+          if (room.alias) {
+            return (
+              room.alias.includes(self.filters) ||
+              room.topic.includes(self.filters)
+            )
+          }
+          return room.topic.includes(self.filters)
+        })
+      }
+      // allRooms 转化成数组，再排序
+
+      return allRoomsObj
+    }
+  },
+  mounted() {
+    this.$store.dispatch('rooms/init')
   },
   methods: {
     select() {

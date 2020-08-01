@@ -1,6 +1,6 @@
 export const state = () => ({
   list: [],
-  contact: {} // current
+  current: {}
 })
 
 export const actions = {
@@ -20,7 +20,7 @@ export const mutations = {
     state.list = items
   },
   ACTIVE(state, item) {
-    state.contact = item
+    state.current = item
   },
   INCREASE_WEIGHT(state, index) {
     state.list[index].weight += 1

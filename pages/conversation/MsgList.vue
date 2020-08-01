@@ -3,33 +3,53 @@
     id="scroll"
     ref="scroll"
     class="warpper"
-    style="height:80vh; overflow-y: scroll; padding:1em"
+    :class="hightClass"
+    style="overflow-y: scroll;"
   >
-    <div class=" title text-xl">chatform 111</div>
+    <div class="header-info title text-xl border border-aliceblue bg-aliceblue">
+      <div v-if="!isActive" class="p-4">
+        Latest Msg
+      </div>
+      <div v-else class="flex justify-between px-6 py-4 bg-aliceblue">
+        <div class="sm:flex sm:items-center info">
+          <img
+            class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-12"
+            :src="contact.avatar"
+            :alt="contact.name"
+          />
+          <div class="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
+            <p class="text-base leading-tight">{{ contact.name }}</p>
+            <p class="text-sm leading-tight text-gray-600">
+              {{ contact.alias }}
+            </p>
+          </div>
+        </div>
+        <div>
+          <button
+            class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
+            @click="scrollToEnd()"
+          >
+            去底部
+          </button>
+        </div>
+      </div>
+    </div>
 
-    <div class="latestMsg">
-      <ul v-if="!isActive">
-        <h1>Latest messages</h1>
-        <li
+    <div class="latestMsg  p-4">
+      <div v-if="!isActive">
+        <div
           v-for="message in messages"
           :key="message.id"
           :contact-id="message.fromId"
         >
-          {{ message.content.data }} == {{ message.fromId }} ==
-          {{ message.to }} ==
-        </li>
-      </ul>
+          <MsgItem :message="message" :contact="contact" />
+        </div>
+      </div>
     </div>
 
-    <div v-if="isActive" class="bubble-dialog">
-      <button
-        class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
-        @click="scrollToEnd()"
-      >
-        去底部
-      </button>
-      <div v-for="message in conversation" :key="message.id" class="bubble">
-        <MsgItem :message="message" />
+    <div v-if="isActive" class="">
+      <div v-for="message in conversation" :key="message.id" class="li">
+        <MsgItem :message="message" :contact="contact" />
       </div>
     </div>
   </div>
@@ -49,8 +69,13 @@ export default {
       return this.$store.state.conversation.list
     },
     isActive() {
-      this.scrollToEnd()
-      return Object.keys(this.$store.state.contacts.contact).length
+      return Object.keys(this.$store.state.contacts.current).length
+    },
+    hightClass() {
+      return this.isActive ? 'h80' : 'h100'
+    },
+    contact() {
+      return this.$store.state.contacts.current
     }
   },
   created() {},
@@ -69,8 +94,21 @@ export default {
 </script>
 
 <style scoped>
-.bubble-dialog {
-  white-space: pre-line;
-  line-height: 0;
+.h80 {
+  height: 90vh;
+}
+.h100 {
+  height: 100vh;
+}
+.warpper {
+  background-color: #ffffff;
+  background-image: url(/images/background-1@2x.aea5e218.png);
+  background-size: 417px 417px;
+  background-repeat: repeat;
+  background-color: #fff;
+}
+.li {
+  padding: 1em;
+  clear: both;
 }
 </style>
