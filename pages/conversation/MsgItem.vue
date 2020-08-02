@@ -26,18 +26,14 @@ export default {
   name: 'MsgItem',
   props: {
     message: Object,
-    contact: {
-      type: Object
-    }
+    contact: Object
   },
   computed: {
     algin() {
       return this.message.kfId ? 'right flex flex-row-reverse' : 'left'
     }
   },
-  mounted() {
-    console.log(this.contact)
-  },
+  mounted() {},
   methods: {}
 }
 </script>

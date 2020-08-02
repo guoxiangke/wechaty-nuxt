@@ -37,15 +37,18 @@ export default {
   },
   computed: {
     isActive() {
-      return this.contact.id === this.$store.state.contacts.current.id
+      // todo check if type != room
+      return this.contact.id === this.$store.state.conversation.current.id
     }
   },
   methods: {
-    active(e) {
-      this.$store.commit('contacts/ACTIVE', this.contact)
-      console.log('ContactItem active', e.target.textContent)
-      // 异步获取 当前active用户的会话消息
-      this.$store.dispatch('conversation/active', this.contact.wechatId)
+    active() {
+      // console.log('ContactItem active', e.target.textContent)
+      // 异步获取 会话消息
+      this.$store.dispatch('conversation/init', this.contact.wechatId)
+      // 设置当前 active的用户 对话
+      this.$store.commit('conversation/ACTIVE', this.contact)
+      this.$store.commit('conversation/SET_TYPE', 'contact')
 
       this.$store.commit('contacts/RESET_UNREAD', this.contact.id)
     }

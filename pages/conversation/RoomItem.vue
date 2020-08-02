@@ -36,16 +36,16 @@ export default {
   },
   computed: {
     isActive() {
-      return this.room.id === this.$store.state.rooms.current.id
+      return this.room.id === this.$store.state.conversation.current.id
     }
   },
   methods: {
     active() {
-      this.$store.commit('rooms/ACTIVE', this.room)
-
-      // // 异步获取 当前active用户的会话消息
-      // this.$store.dispatch('conversation/active', this.room.wechatId)
-
+      // 异步获取 群消息
+      this.$store.dispatch('conversation/init', this.room.roomId)
+      // 设置当前 active的群 对话
+      this.$store.commit('conversation/ACTIVE', this.room)
+      this.$store.commit('conversation/SET_TYPE', 'room')
       // this.$store.commit('rooms/RESET_UNREAD', this.room.id)
     }
   }

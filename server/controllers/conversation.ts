@@ -113,9 +113,15 @@ export default class ConversationController {
     let fromId = 0
     let messages: Array<any> = []
     if (to.includes('@chatroom')) {
-      // 群组聊天记录
+      // 获取群组聊天记录
+      messages = await Message.findAll({
+        limit: 1000,
+        where: {
+          to
+        }
+      })
     } else {
-      // 个人聊天记录
+      // 获取个人聊天记录
       const from: ContactModel | null = await ContactModel.findOne({
         attributes: ['id'],
         where: {
@@ -123,7 +129,6 @@ export default class ConversationController {
         }
       })
       if (!from) throw new Error('必须要有from118')
-      console.log('fromIdfromId', from.id, to)
       fromId = from.id
 
       if (bot.bind === to) {
@@ -170,7 +175,8 @@ export default class ConversationController {
       where: {
         bot_id: botId,
         type: Contact.Type.Personal, // Contact.type()
-        from: [Type.Individual, Type.RoomOwner] // 不显示群成员！
+        // 获取群成员，为了显示群消息，前段过滤群成员
+        from: [Type.Individual, Type.RoomOwner, Type.RoomMemeber] // 不显示群成员！
       }
     })
     // allContacts 转换成obj

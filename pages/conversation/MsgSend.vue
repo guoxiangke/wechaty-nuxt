@@ -24,7 +24,14 @@ export default {
   computed: {
     isDisabled() {
       // var isMyObjectEmpty = !Object.keys(myObject).length;
-      return !Object.keys(this.$store.state.contacts.current).length
+      return !Object.keys(this.current).length
+    },
+    current() {
+      return this.$store.state.conversation.current
+    },
+    to() {
+      // 消息发送给 谁？ wechatId/roomId xxx@chatroom
+      return this.current.wechatId || this.current.roomId
     }
   },
   methods: {
@@ -35,7 +42,7 @@ export default {
         return
       }
       const body = {
-        id: this.$store.state.contacts.current.wechatId, // 'bluesky_still', // 获取当前的wechatID
+        id: this.to,
         content: {
           type: 'text',
           data: this.newMessage

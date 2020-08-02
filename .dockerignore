@@ -2,7 +2,7 @@ node_modules
 npm-debug.log
 
 /docs
-/files
+/static/files
 /screenshot
 *.memory-card.json
 /server/models/imports/*.json

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="isLoaded"
     id="scroll"
     ref="scroll"
     class="warpper"
@@ -14,13 +15,13 @@
         <div class="sm:flex sm:items-center info">
           <img
             class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-12"
-            :src="contact.avatar"
-            :alt="contact.name"
+            :src="current.avatar"
+            :alt="currentTitle"
           />
           <div class="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-            <p class="text-base leading-tight">{{ contact.name }}</p>
+            <p class="text-base leading-tight">{{ currentTitle }}</p>
             <p class="text-sm leading-tight text-gray-600">
-              {{ contact.alias }}
+              {{ current.alias }}
             </p>
           </div>
         </div>
@@ -42,14 +43,14 @@
           :key="message.id"
           :contact-id="message.fromId"
         >
-          <MsgItem :message="message" :contact="contact" />
+          <MsgItem :message="message" :contact="contacts[message.fromId]" />
         </div>
       </div>
     </div>
 
     <div v-if="isActive" class="">
       <div v-for="message in conversation" :key="message.id" class="li">
-        <MsgItem :message="message" :contact="contact" />
+        <MsgItem :message="message" :contact="contacts[message.fromId]" />
       </div>
     </div>
   </div>
@@ -63,19 +64,36 @@ export default {
   components: { MsgItem },
   computed: {
     messages() {
+      // 首页显示的最近1000条信息
       return this.$store.state.messages.list
     },
     conversation() {
+      // 当前 群/会话的 所有消息
       return this.$store.state.conversation.list
     },
     isActive() {
-      return Object.keys(this.$store.state.contacts.current).length
+      return Object.keys(this.$store.state.conversation.current).length
     },
     hightClass() {
       return this.isActive ? 'h80' : 'h100'
     },
-    contact() {
-      return this.$store.state.contacts.current
+    current() {
+      // 可以是群
+      return this.$store.state.conversation.current
+    },
+    currentTitle() {
+      return this.current.name || this.current.topic
+    },
+    isRoom() {
+      return this.$store.state.conversation.type === 'room'
+    },
+    contacts() {
+      // 用于获取 消息所对应的contact
+      return this.$store.state.contacts.list
+    },
+    isLoaded() {
+      // Object.keys(allContactsObj).length
+      return Object.keys(this.contacts).length && this.messages.length
     }
   },
   created() {},

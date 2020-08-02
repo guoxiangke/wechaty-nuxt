@@ -10,8 +10,9 @@ const fs = require('fs')
  */
 export async function saveMsgFile(msg: Message, subDir: string) {
   const file: FileBox = await msg.toFileBox()
-  const targetDir = `./files/msg/${subDir}`
-  // create subDir if not exsits
+  const dir = process.env.FILES_STATIC
+  // ./static/files/msg/
+  const targetDir = `./static/${dir}${subDir}`
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true })
   }

@@ -15,4 +15,5 @@ router.get('/:id/login', Controller.login)
 router.get('/:id/logout', Controller.logout)
 
 router.post('/:id/send', Controller.send)
+
 export default router

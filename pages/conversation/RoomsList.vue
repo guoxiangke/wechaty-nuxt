@@ -5,7 +5,7 @@
         class="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal"
         @click="isShow = !isShow"
       >
-        <span v-if="isShow"> 折叠</span>
+        <span v-if="isShow"> 隐藏</span>
         <span v-else> 展开</span>
         群
       </button>
@@ -33,51 +33,35 @@ export default {
   },
   data() {
     return {
-      isShow: false,
-      filters: ''
+      isShow: false
     }
   },
   computed: {
+    filters() {
+      return this.$store.state.search.keyword
+    },
     rooms() {
       const latestMsgs = this.$store.state.messages.list
       const allRoomsObj = this.$store.state.rooms.list
-      // orderBy contact.weight
-      // 确保有值后再计算
-      console.log(Object.keys(allRoomsObj).length, 'allRoomsObj')
-      const roomsArray = []
-      const self = this
-      if (Object.keys(allRoomsObj).length && latestMsgs.length) {
-        // // 只含群消息 && ！机器人主动发送的信息
-        // // todo 24会变 / 机器人永远置顶，weight = 9999
-        // const filterMsgs = latestMsgs.filter(
-        //   (item) => item.to.includes('@chatroom') && item.fromId !== 24
-        // )
-        // // 需要清零weight，不然是累加了
-        // filterMsgs.forEach((msg) => {
-        //   if (allRoomsObj[msg.fromId]) {
-        //     this.$store.commit('rooms/RESET_WEIGHT', msg.fromId)
-        //   }
-        // })
-        // // change weight by messages!
-        // filterMsgs.forEach((msg) => {
-        //   if (allRoomsObj[msg.fromId]) {
-        //     this.$store.commit('rooms/INCREASE_WEIGHT', msg.fromId)
-        //   }
-        // })
 
+      const roomsArray = []
+      // 确保有值后再计算
+      if (Object.keys(allRoomsObj).length && latestMsgs.length) {
+        // 转换成数组再filter Array.filter
         Object.values(allRoomsObj).forEach((room) => {
           roomsArray.push(room)
         })
-        roomsArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        // rooms 无weight，不再排序
+        // roomsArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
 
-        return roomsArray.filter(function(room) {
+        return roomsArray.filter((room) => {
           if (room.alias) {
             return (
-              room.alias.includes(self.filters) ||
-              room.topic.includes(self.filters)
+              room.alias.includes(this.filters) ||
+              room.topic.includes(this.filters)
             )
           }
-          return room.topic.includes(self.filters)
+          return room.topic.includes(this.filters)
         })
       }
       // allRooms 转化成数组，再排序
@@ -88,11 +72,7 @@ export default {
   mounted() {
     this.$store.dispatch('rooms/init')
   },
-  methods: {
-    select() {
-      alert('todo')
-    }
-  }
+  methods: {}
 }
 </script>
 

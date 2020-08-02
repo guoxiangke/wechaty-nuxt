@@ -18,12 +18,12 @@ export default {
       const allContactsObj = this.$store.state.contacts.list
       // orderBy contact.weight
       // 确保有值后再计算
-      console.log(Object.keys(allContactsObj).length, 'allContactsObj')
+      // console.log(Object.keys(allContactsObj).length, 'allContactsObj')
       const contactsArray = []
       const self = this
       if (Object.keys(allContactsObj).length && latestMsgs.length) {
         // 过滤掉群消息 || 机器人主动发送的信息
-        // todo 24会变 / 机器人永远置顶，weight = 9999
+        // todo 24 会变 / 机器人永远置顶，weight = 9999
         const filterMsgs = latestMsgs.filter(
           (item) => !item.to.includes('@chatroom') && item.fromId !== 24
         )
@@ -43,6 +43,11 @@ export default {
         Object.values(allContactsObj).forEach((contact) => {
           contactsArray.push(contact)
         })
+        // 过滤掉，不显示群成员
+        // from !== Type.RoomMemeber 2
+        contactsArray.filter((contact) => {
+          return contact.from !== 2
+        })
         contactsArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
 
         return contactsArray.filter(function(contact) {
@@ -58,9 +63,6 @@ export default {
       // allContacts 转化成数组，再排序
 
       return allContactsObj
-    },
-    test() {
-      return 'getter'
     },
     filters() {
       return this.$store.state.search.keyword

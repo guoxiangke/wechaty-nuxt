@@ -20,9 +20,7 @@ export async function say(
   let message: void | Message
   // room or contact?
   if (to.includes('@chatroom')) {
-    const room: Room | null = await wechaty.Room.find({
-      topic: to
-    })
+    const room: Room | null = await wechaty.Room.load(to)
     if (!room) throw new Error('should have contact to say')
     message = await room.say(content)
   } else {

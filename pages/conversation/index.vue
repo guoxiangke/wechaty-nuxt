@@ -11,11 +11,11 @@
         <ContactsList />
       </section>
     </div>
-    <div class="col-span-2 conversations">
+    <div class="col-span-1 conversations">
       <MsgList />
       <MsgSend />
     </div>
-    <div class="col-span-1 infos invisible lg:invisible xl:visible">
+    <div class="col-span-2 infos invisible lg:invisible xl:visible p-4">
       <RightInfo :connected="isConnected" :logged="isBotLogin" />
     </div>
   </section>
@@ -84,6 +84,9 @@ export default {
     // },
     page() {
       return this.$route.query.page
+    },
+    current() {
+      return this.$store.state.conversation.current
     }
   },
   created() {},
@@ -102,7 +105,10 @@ export default {
     newMsgEmit(message) {
       this.$store.commit('messages/ADD', message)
       // 如果新到消息在某个active会话，则加入到 conversation 数据里
-      if (this.$store.state.contacts.current.wechatId === message.to) {
+      if (
+        this.current.wechatId === message.to ||
+        this.current.roomId === message.to
+      ) {
         this.$store.commit('conversation/ADD', message)
       } else {
         // 未读消息 +1

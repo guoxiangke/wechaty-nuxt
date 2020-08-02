@@ -23,8 +23,10 @@ export async function saveMsg(
   if (!sender) throw new Error('no sender!')
   // 获取消息发送的联系人。在微信群中，Message.to() 会返回null，使用Message.room()获取微信群信息。
   // 上面👆文档解释错误🙅‍♂️！ to()始终有值！ 2020.6.23
-  const to = msg.to()
-  if (!to) throw new Error('no to!')
+  let to: any = msg.to()
+  if (!to) {
+    to = msg.room()
+  }
 
   let content: any // 要保存到数据库中的内容，默认为 msg.text()
   content = msg.text()
