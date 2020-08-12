@@ -7,10 +7,8 @@
             <img :src="contact.avatar" :alt="contact.name" />
           </div>
         </div>
-        <div class="intercom-comment">
-          <div class="intercom-block-paragraph">
-            {{ message.content.data }}
-          </div>
+        <div class="intercom-comment" :class="bgColor">
+          <div class="intercom-block-paragraph" v-html="content"></div>
         </div>
       </div>
     </div>
@@ -28,9 +26,33 @@ export default {
     message: Object,
     contact: Object
   },
+  data() {
+    return {
+      bgColor: 'bg-gray-200'
+    }
+  },
   computed: {
     algin() {
       return this.message.kfId ? 'right flex flex-row-reverse' : 'left'
+    },
+    content() {
+      let content = this.message.content.data
+      if (`${content}`.endsWith('.gif') || `${content}`.endsWith('.png')) {
+        content = '<img src="/' + content + '" />'
+        this.bgColor = 'bg-transparent'
+      } else if (content && content.url) {
+        // console.log(content)
+        content = `<div>
+        <a target="_blank" href="${content.url}">
+          <div class="title text-indigo-600 font-medium"> <p>${content.title} </p> </div>
+          <div class="desc">
+          <div class="description"> <p>${content.description} </p> </div>
+          <div> <img src="${content.thumbnailUrl}"/> </div>
+          </div>
+        </a>
+        </div>`
+      }
+      return content
     }
   },
   mounted() {},
@@ -73,7 +95,6 @@ export default {
 }
 .intercom-comment {
   color: #606273;
-  background-color: #eff3f6;
   padding: 10px 15px;
   border-radius: 4px;
   width: fit-content;

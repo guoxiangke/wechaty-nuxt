@@ -16,21 +16,31 @@
       <MsgSend />
     </div>
     <div class="col-span-2 infos invisible lg:invisible xl:visible p-4">
-      <RightInfo :connected="isConnected" :logged="isBotLogin" />
+      <div v-if="!isBotLogin">
+        <button @click.stop="loginBot">登录bot</button>
+        <div v-if="loginQR">
+          <img :src="loginQR" />
+
+          请联系bot持有者，微信扫描此二维码，扫描登录。长按识别二维码无效
+        </div>
+      </div>
+      <RightInfo :logged="isBotLogin" />
     </div>
   </section>
 </template>
 
 <script>
 // import { mapState } from 'vuex'
-import RoomsList from './RoomsList'
-import ContactsList from './ContactsList'
-import RightInfo from './RightInfo'
-import MsgList from './MsgList'
-import MsgSend from './MsgSend'
-import Search from './Search'
+import RoomsList from '~/components/conversation/RoomsList'
+import ContactsList from '~/components/conversation/ContactsList'
+import RightInfo from '~/components/conversation/RightInfo'
+import MsgList from '~/components/conversation/MsgList'
+import MsgSend from '~/components/conversation/MsgSend'
+import Search from '~/components/conversation/Search'
 
 export default {
+  // 确保用户已经登录，登录的用户有绑定的botId
+  middleware: 'auth',
   components: {
     Search,
     RoomsList,
@@ -39,68 +49,21 @@ export default {
     RightInfo,
     MsgSend
   },
-  async asyncData(context) {
-    // Get first page! https://blog.csdn.net/Tomwildboar/article/details/95928616
-    const uri = '/bots/1/login' // + context.page
-    const res = await context.$axios.get(uri)
-    return { isBotLogin: res.success }
-  },
   data() {
     return {
       isBotLogin: false,
-      isConnected: false,
-      contacts: [],
-      rooms: []
+      loginQR: ''
     }
   },
-  computed: {
-    // // ...mapState(['chatMessages']),
-    // filteredContacts() {
-    //   const self = this
-
-    //   // self.contacts.sort(function(p1, p2) {
-    //   //   return p2.id - p1.id
-    //   // })
-    //   // console.log(self.lists.length, self.filters)
-    //   if (!self.filters) {
-    //     return self.contacts
-    //   }
-    //   return self.contacts.filter(function(contact) {
-    //     return contact.name.includes(self.filters)
-    //   })
-    // },
-    // filteredRooms() {
-    //   const self = this
-
-    //   // self.contacts.sort(function(p1, p2) {
-    //   //   return p2.id - p1.id
-    //   // })
-    //   if (!self.filters) {
-    //     return self.rooms
-    //   }
-    //   return self.rooms.filter(function(contact) {
-    //     return contact.name.includes(self.filters)
-    //   })
-    // },
-    page() {
-      return this.$route.query.page
-    },
-    current() {
-      return this.$store.state.conversation.current
-    }
-  },
-  created() {},
-  mounted() {},
   sockets: {
-    connect() {
-      // Fired when the socket connects.
-      this.isConnected = true
-    },
-
-    disconnect() {
-      this.isConnected = false
-    },
-
+    // connect() {
+    //   // Fired when the socket connects.
+    //   this.isConnected = true
+    // },
+    // disconnect() {
+    //   alert('socket disconnect')
+    //   this.isConnected = false
+    // },
     // broadcast
     newMsgEmit(message) {
       this.$store.commit('messages/ADD', message)
@@ -116,7 +79,29 @@ export default {
       }
     }
   },
-  methods: {}
+  computed: {
+    page() {
+      return this.$route.query.page
+    },
+    current() {
+      return this.$store.state.conversation.current
+    }
+  },
+  methods: {
+    async loginBot() {
+      // 确保用户已经登录，登录的用户有绑定的botId
+      const botId = this.$store.state.authUser.botId
+      const uri = `/bots/${botId}/login` // + context.page
+      const data = await this.$axios.$get(uri)
+      console.log(data)
+      if ('success' in data) {
+        this.isBotLogin = data.success
+      } else {
+        // {"qrcode":"http://weixin.qq.com/x/oe4Ssqs6eI7LqQcfKNIY"}
+        this.loginQR = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${data.qrcode}`
+      }
+    }
+  }
 }
 </script>
 

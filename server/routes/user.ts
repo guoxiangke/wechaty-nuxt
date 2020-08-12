@@ -4,11 +4,13 @@ import * as Koa from 'koa'
 // const router = require('koa-router')()
 import Router from '@koa/router'
 import { User } from '../models'
+import auth from '../middlewares/auth'
+// const auth = require('../../middlewares/auth')
 
 const router = new Router({
   prefix: '/api/users'
 })
-
+router.use(auth())
 // https://github.com/koajs/router/blob/master/API.md
 
 // 'GET ALL'
@@ -22,7 +24,16 @@ router.get('/:id', async (ctx: Koa.Context) => {
 })
 
 router.post('/', async (ctx: Koa.Context) => {
-  // ctx.body = 'POST SAVE New'
+  // const { username, password, email, code } = ctx.request.body;
+
+  // todo check 已被注册
+  // if (user.length) {
+  //   ctx.body = {
+  //     code: -1,
+  //     msg: '已被注册'
+  //   }
+  //   return
+  // }
   const newUser = await User.create(ctx.params.body)
   await newUser.save()
   ctx.body = newUser
@@ -31,7 +42,6 @@ router.post('/', async (ctx: Koa.Context) => {
 router.delete('/:id', async (ctx: Koa.Context) => {
   // ctx.body = 'DELETE'
   const results = await User.destroy(ctx.params.id)
-  console.log('DELETE user', results)
   ctx.body = results
 })
 

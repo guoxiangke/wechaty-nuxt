@@ -5,8 +5,8 @@ export const state = () => ({
 export const actions = {
   async init({ commit }) {
     const uri = '/conversation/1/rooms'
-    const items = await this.$axios.get(uri)
-    commit('INIT', items)
+    const { data } = await this.$axios.get(uri)
+    commit('INIT', data)
   }
 }
 

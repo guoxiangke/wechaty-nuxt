@@ -49,10 +49,10 @@ export default {
         }
       }
       // POST /api/bots/1/send
-      const res = await this.$axios.$post('/bots/1/send', body)
+      const { data } = await this.$axios.$post('/bots/1/send', body)
       this.newMessage = ''
       // todo if(!res)  alert('消息发送失败')
-      console.log('res of send always： false: todo', res)
+      console.log('res of send always： false: todo', data)
     }
   }
 }

@@ -7,8 +7,8 @@ export const state = () => ({
 export const actions = {
   async init({ commit }, to) {
     const uri = '/conversation/1/messages/' + to
-    const messages = await this.$axios.get(uri)
-    commit('INIT', messages)
+    const { data } = await this.$axios.get(uri)
+    commit('INIT', data)
   }
 }
 

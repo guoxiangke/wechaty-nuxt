@@ -13,18 +13,17 @@ https://wechaty.js.org/v/zh/api/
 
 http://localhost:3000/conversation
 
-- [ ] 消息类型展示-图片
+- [ ] is starting...
+- [x] 消息类型展示-图片
 - [ ] 消息类型展示-语音
 - [ ] 消息类型展示-语音转文字
 - [ ] 消息操作-快捷回复
 - [ ] 消息操作-回复图片
 - [ ] 消息操作-回复录音
-- [ ] 联系人展示-群组
+- [x] 联系人展示-群组
 - [ ] Last Reader/ Last Reader At by conversation/contact.
 - [ ] 给谁发消息后 last message，谁应该在 list 上面（类似于 star 星标）
-- [ ] Koa login jwt
-      https://www.jianshu.com/p/8237b4e1cf60
-      https://segmentfault.com/a/1190000017379244
+- [ ] Koa
 - [ ] onLogout 退出
 - [ ] 入群管理 begin
 - [ ] 踢群
@@ -109,6 +108,9 @@ http://localhost:3000/conversation
 - [x] 消息存储到 DB
   - [x] room.config.logMsg = true
   - [x] files 存储到 files/msg/ 并 md5 去重
+- [x] BE auth Middleware
+- [x] FE auth Middleware
+- [x] Login & Logout with koa-passport + session
 
 ## Build Setup (Nuxt)
 

@@ -7,10 +7,11 @@ import helmet from 'koa-helmet'
 import cors from '@koa/cors'
 // @ts-ignore
 import { Nuxt, Builder } from 'nuxt'
+// const session = require('koa-session')
+// import passport from 'koa-passport';
+import passport from './interface/passport'
 import { Vars as Global } from './global-var'
 const consola = require('consola')
-
-// const { Nuxt, Builder } = require('nuxt')
 // Doc: https://www.npmjs.com/package/consola
 // import Consola from 'consola' // todo
 // import { log } from 'brolog'
@@ -28,9 +29,9 @@ const app = new Koa()
 
 // 路由自动化注册
 // https://www.cnblogs.com/chanwahfung/p/12899714.html#559612336
-function useRouter(dir?: string) {
-  dir = dir || path.join(__dirname, 'routes') //  __dirname + '/routes'
-
+function useRouter(dir: string = '') {
+  // todo 空文件夹bug in routes/protected
+  dir = path.join(__dirname, 'routes', dir) //  __dirname + '/routes'
   // 获取 routes 目录下的所有文件名，urls为文件名数组
   const urls = fs.readdirSync(dir)
   urls.forEach((element: string) => {
@@ -75,17 +76,16 @@ async function start() {
   // Enable bodyParser with default options
   app.use(bodyParser())
 
+  // sessions
+  // https://www.cnblogs.com/shenshangzz/p/9973422.html
+  const session = require('koa-session')
+  app.keys = [process.env.SESSION_SECRET || 'your-session-secret']
+  app.use(session({}, app))
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+
   useRouter()
-  // these routes are NOT protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
-  // app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods())
-
-  // JWT middleware -> below this line routes are only reached if JWT token is valid, secret as env variable
-  // do not protect swagger-json and swagger-html endpoints
-  // app.use(jwt({ secret: config.jwtSecret }).unless({ path: [/^\/swagger-/] }))
-
-  // These routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
-  // app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
-
   // Koa.Context
   app.use((ctx: any) => {
     ctx.status = 200
@@ -113,9 +113,9 @@ async function start() {
 
   // DOC https://blog.csdn.net/nathanhuang1220/article/details/41348213
   io.on('connection', (socket: any) => {
-    consola.log('a user connected', socket.id)
+    consola.success('SOCKET: connected', socket.id)
     socket.on('disconnect', () => {
-      consola.log('user disconnected', socket.id)
+      consola.info('SOCKET: disconnected', socket.id)
     })
     socket.on('emit_ping', (ctx: any) => {
       consola.log('get ctx.data', ctx.data)

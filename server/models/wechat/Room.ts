@@ -18,6 +18,7 @@ export class Room extends Model {
   public autoJoin!: boolean // 入群管理
 
   public botId!: number
+  public unreadCount!: number // 每收到一个消息，count+1
 }
 
 Room.init(
@@ -55,6 +56,10 @@ Room.init(
     botId: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: false
+    },
+    unreadCount: {
+      type: new DataTypes.TINYINT(),
+      defaultValue: 0
     }
   },
   {

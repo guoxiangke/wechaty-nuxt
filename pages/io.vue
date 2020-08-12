@@ -13,6 +13,7 @@
 
 export default {
   async asyncData(context) {
+    console.log(context.app.store)
     // Get first page! https://blog.csdn.net/Tomwildboar/article/details/95928616
     const uri = '/conversation/1' // + context.page
     const res = await context.$axios.get(uri)

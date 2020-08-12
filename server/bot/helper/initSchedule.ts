@@ -1,6 +1,7 @@
 import { log, Contact, Wechaty, Room } from 'wechaty'
+import { FileBox } from 'file-box'
 import { Task, Subscription } from '../../models'
-const { FileBox } = require('file-box')
+// const { FileBox } = require('file-box')
 const moment = require('moment')
 
 export { initSchedule }

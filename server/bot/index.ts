@@ -23,11 +23,13 @@ class Wechat {
   public wechaty: Wechaty | null = null
 
   async start() {
+    // https://github.com/wechaty/wechaty-puppet-padplus/issues/142
+    const puppet = 'wechaty-puppet-padplus'
+    const token = this.bot.token
     const wechaty = new Wechaty({
-      name: `${this.bot.id}`, // "1"
-      puppet: new PuppetPadplus({
-        token: this.bot.token
-      })
+      name: `${this.bot.id}`,
+      puppet,
+      puppetOptions: { token }
     })
     this.wechaty = wechaty
     return await new Promise((resolve, reject) => {
@@ -35,7 +37,7 @@ class Wechat {
       // wechaty.on('login', './listeners/on-login')
       // wechaty.on('logout', './listeners/on-logout')
       wechaty
-        .on('scan', (qrcode) => {
+        .on('scan', (qrcode: any) => {
           resolve({ qrcode })
         })
         .on('login', async () => {

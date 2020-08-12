@@ -1,5 +1,5 @@
 import { Message } from 'wechaty'
-import { FileBox } from 'file-box'
+// import { FileBox } from 'file-box'
 import { MessageType } from 'wechaty-puppet'
 
 import { FileBox as FileBoxModel } from '../../models'
@@ -9,10 +9,11 @@ const fs = require('fs')
  * saveMsgFile
  */
 export async function saveMsgFile(msg: Message, subDir: string) {
-  const file: FileBox = await msg.toFileBox()
-  const dir = process.env.FILES_STATIC
+  const file = await msg.toFileBox()
+  const dir = process.env.FILES_STATIC || 'files/msg/'
+  console.error(dir, 'saveMsgFile,14')
   // ./static/files/msg/
-  const targetDir = `./static/${dir}${subDir}`
+  const targetDir = `./${dir}${subDir}`
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true })
   }

@@ -9,9 +9,15 @@
         My bee&#39;s knees Nuxt.js project
       </h2>
       <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
+        <nuxt-link
+          v-if="!$store.state.authUser"
+          to="/login"
+          class="button--green"
+          >Login</nuxt-link
+        >
+        <button v-else class="button button--green" @click.stop="logout">
+          Logout
+        </button>
         <a
           href="https://github.com/nuxt/nuxt.js"
           target="_blank"
@@ -31,6 +37,20 @@ import Logo from '~/components/Logo.vue'
 export default Vue.extend({
   components: {
     Logo
+  },
+  sockets: {
+    connect() {
+      // Fired when the socket connects.
+      console.log('socket connected')
+    },
+    disconnect() {
+      console.log('socket disconnect')
+    }
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('logout')
+    }
   }
 })
 </script>

@@ -1,4 +1,5 @@
 import Router from '@koa/router'
+import auth from '../middlewares/auth'
 // import { Wechat } from '../bot'
 // import { Bot } from '../models/Bot'
 
@@ -6,9 +7,7 @@ import { ConversationController as Controller } from '../controllers'
 
 const router = new Router()
 router.prefix('/api/conversation')
-// const router = new Router({
-//   prefix: '/api/conversation'
-// })
+router.use(auth())
 
 router.get('/:bot_id', Controller.list)
 

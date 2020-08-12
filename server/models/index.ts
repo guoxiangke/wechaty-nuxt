@@ -3,7 +3,7 @@ import { Bot } from './Bot'
 import { Contact } from './wechat/Contact'
 import { Member } from './wechat/Member'
 import { Room } from './wechat/Room'
-// import { Message } from './wechat/Message'
+import { Message } from './wechat/Message'
 import { Subscription } from './Subscription'
 import { Task } from './Task'
 
@@ -29,8 +29,6 @@ export { Subscription } from './Subscription'
 // 一个用户拥有一个地址
 // User.hasOne(Address,{sourceKey: 'id'});
 
-// Address(userId) => user（botID）
-// User =>  bot
 User.belongsTo(Bot, { targetKey: 'id' })
 Bot.hasOne(User, { sourceKey: 'id' })
 
@@ -39,15 +37,16 @@ Bot.hasOne(User, { sourceKey: 'id' })
 // var project = Project.create({title: 'ISD Corp'});
 // user.addProject({project});
 
+// To create a One-To-Many relationship, the hasMany and belongsTo associations are used together;
+// Team.hasMany(Player);
+// Player.belongsTo(Team); //TeamId
+
 // 每个Contact 必须 属于 某一个 bot
 // 每条消息 必须 属于 某一个 Contact (fromId)
+// Contact.hasOne(Bot, { sourceKey: 'id' })
 
-// fromId is contactId
+// todo fromId is contactId
 // Contact.hasMany(Message, {
-//   foreignKey: 'fromId'
-// })
-
-// Message.belongsTo(Contact, {
 //   foreignKey: 'fromId'
 // })
 

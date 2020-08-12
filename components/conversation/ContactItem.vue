@@ -4,6 +4,7 @@
     :data-id="contact.id"
     :data-weight="contact.weight"
     :active="isActive"
+    :data-from="contact.from"
   >
     <div class="sm:flex sm:items-center px-6 py-4" @click="active">
       <img

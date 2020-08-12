@@ -20,6 +20,16 @@ export default {
       // 确保有值后再计算
       // console.log(Object.keys(allContactsObj).length, 'allContactsObj')
       const contactsArray = []
+
+      Object.values(allContactsObj).forEach((contact) => {
+        contactsArray.push(contact)
+      })
+      // 过滤掉，不显示群成员
+      // from !== Type.RoomMemeber 2
+      const filteredArray = contactsArray.filter((contact) => {
+        return contact.from !== 2
+      })
+
       const self = this
       if (Object.keys(allContactsObj).length && latestMsgs.length) {
         // 过滤掉群消息 || 机器人主动发送的信息
@@ -39,18 +49,9 @@ export default {
             this.$store.commit('contacts/INCREASE_WEIGHT', msg.fromId)
           }
         })
+        filteredArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
 
-        Object.values(allContactsObj).forEach((contact) => {
-          contactsArray.push(contact)
-        })
-        // 过滤掉，不显示群成员
-        // from !== Type.RoomMemeber 2
-        contactsArray.filter((contact) => {
-          return contact.from !== 2
-        })
-        contactsArray.sort((a, b) => (a.weight > b.weight ? -1 : 1))
-
-        return contactsArray.filter(function(contact) {
+        return filteredArray.filter(function(contact) {
           if (contact.alias) {
             return (
               contact.alias.includes(self.filters) ||
@@ -62,7 +63,7 @@ export default {
       }
       // allContacts 转化成数组，再排序
 
-      return allContactsObj
+      return filteredArray // 默认初始化的数据
     },
     filters() {
       return this.$store.state.search.keyword
