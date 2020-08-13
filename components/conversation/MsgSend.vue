@@ -1,15 +1,24 @@
 <template>
   <div v-if="!isDisabled">
-    <textarea
-      id="textarea"
-      v-model="newMessage"
-      type="textarea"
-      name="message"
-      placeholder="回车发布消息..."
-      :disabled="isDisabled"
-      class="bg-aliceblue focus:bg-white focus:border-gray-300 placeholder-gray-600 duration-100 ease-in-out focus:outline-none border border-transparent "
-      @keyup.enter="sendMsg"
-    ></textarea>
+    <div class="relative">
+      <textarea
+        id="textarea"
+        v-model="newMessage"
+        type="textarea"
+        name="message"
+        placeholder="回车发布消息..."
+        :disabled="isDisabled || sending"
+        class="bg-aliceblue focus:bg-white focus:border-gray-300 placeholder-gray-600 duration-100 ease-in-out focus:outline-none border border-transparent "
+        @keyup.enter="sendMsg"
+      >
+      </textarea>
+      <div v-show="sending" class="lds-ring absolute right-0 top-auto">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,7 +27,8 @@ export default {
   name: 'MsgSend',
   data() {
     return {
-      newMessage: ''
+      newMessage: '',
+      sending: false
     }
   },
   computed: {
@@ -49,10 +59,15 @@ export default {
         }
       }
       // POST /api/bots/1/send
-      const { data } = await this.$axios.$post('/bots/1/send', body)
-      this.newMessage = ''
-      // todo if(!res)  alert('消息发送失败')
-      console.log('res of send always： false: todo', data)
+      this.sending = true
+      const { success } = await this.$axios.$post('/bots/1/send', body)
+      this.sending = false
+      if (!success) {
+        alert('消息发送失败')
+      } else {
+        this.newMessage = ''
+      }
+      // scrollToBottom
     }
   }
 }
@@ -62,5 +77,40 @@ export default {
 #textarea {
   padding: 1em;
   width: 100%;
+}
+/* // https://loading.io/css/ */
+.lds-ring {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border: 5px solid #15c399;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #15c399 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

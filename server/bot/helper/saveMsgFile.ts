@@ -10,8 +10,7 @@ const fs = require('fs')
  */
 export async function saveMsgFile(msg: Message, subDir: string) {
   const file = await msg.toFileBox()
-  const dir = process.env.FILES_STATIC || 'files/msg/'
-  console.error(dir, 'saveMsgFile,14')
+  const dir = process.env.FILES_STATIC || 'static/files/msg/'
   // ./static/files/msg/
   const targetDir = `./${dir}${subDir}`
   if (!fs.existsSync(targetDir)) {

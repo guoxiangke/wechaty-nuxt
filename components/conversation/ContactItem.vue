@@ -8,8 +8,8 @@
   >
     <div class="sm:flex sm:items-center px-6 py-4" @click="active">
       <img
+        v-lazy="contact.avatar"
         class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-12"
-        :src="contact.avatar"
         :alt="contact.name"
       />
       <div v-if="contact.unreadCount > 0" class="unreader">

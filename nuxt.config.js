@@ -29,7 +29,10 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: '@/plugins/socket.io', ssr: false }],
+  plugins: [
+    { src: '@/plugins/socket.io', ssr: false },
+    { src: '@/plugins/lazy' }
+  ],
   // '@/plugins/axios',
   /*
    ** Nuxt.js dev-modules

@@ -10,10 +10,10 @@ export const mutations = {
 
 export const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
-  nuxtServerInit({ commit }, data) {
-    // console.log(Object.keys(data.req.user))
-    if (data.req.user) {
-      commit('SET_USER', data.req.user)
+  nuxtServerInit({ commit }, context) {
+    // console.log(Object.keys(context))
+    if (context.req.user) {
+      commit('SET_USER', context.req.user)
     }
   },
   async login({ commit }, { email, password }) {

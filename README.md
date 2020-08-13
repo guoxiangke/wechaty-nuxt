@@ -13,6 +13,9 @@ https://wechaty.js.org/v/zh/api/
 
 http://localhost:3000/conversation
 
+- [ ] error page.vue 美化
+- [ ] login 使用弹窗
+- [ ] CURD of config
 - [ ] is starting...
 - [x] 消息类型展示-图片
 - [ ] 消息类型展示-语音
@@ -22,8 +25,8 @@ http://localhost:3000/conversation
 - [ ] 消息操作-回复录音
 - [x] 联系人展示-群组
 - [ ] Last Reader/ Last Reader At by conversation/contact.
-- [ ] 给谁发消息后 last message，谁应该在 list 上面（类似于 star 星标）
-- [ ] Koa
+- [x] 给谁发消息后 last message，谁应该在 list 上面（类似于 star 星标）
+- [x] Koa
 - [ ] onLogout 退出
 - [ ] 入群管理 begin
 - [ ] 踢群

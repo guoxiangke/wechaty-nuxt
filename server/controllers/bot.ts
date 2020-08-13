@@ -7,7 +7,7 @@ import { Message as MsgModel, Bot } from '../models'
 import { Vars as Global } from '../global-var'
 
 export default class BotController {
-  // status: isLoging...
+  // todo status: isLoging... 登录的时间，这个过程中可能导致多次登录
   public static async login(ctx: Koa.Context): Promise<void> {
     if (!ctx.params.id) throw new Error('缺少id')
     const id = ctx.params.id
@@ -41,7 +41,7 @@ export default class BotController {
       bot.bind = contact.id
       await bot.save()
     } else {
-      result = { success: 'true' }
+      result = { success: true }
       log.info('BotController:login', 'already')
     }
     ctx.body = result

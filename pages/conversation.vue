@@ -17,7 +17,6 @@
     </div>
     <div class="col-span-2 infos invisible lg:invisible xl:visible p-4">
       <div v-if="!isBotLogin">
-        <button @click.stop="loginBot">登录bot</button>
         <div v-if="loginQR">
           <img :src="loginQR" />
 
@@ -55,15 +54,23 @@ export default {
       loginQR: ''
     }
   },
+  computed: {
+    current() {
+      return this.$store.state.conversation.current
+    }
+  },
+  mounted() {
+    this.loginBot()
+  },
   sockets: {
     // connect() {
     //   // Fired when the socket connects.
     //   this.isConnected = true
     // },
-    // disconnect() {
-    //   alert('socket disconnect')
-    //   this.isConnected = false
-    // },
+    disconnect() {
+      alert('与服务器链接已断开')
+      // this.isConnected = false
+    },
     // broadcast
     newMsgEmit(message) {
       this.$store.commit('messages/ADD', message)
@@ -79,25 +86,15 @@ export default {
       }
     }
   },
-  computed: {
-    page() {
-      return this.$route.query.page
-    },
-    current() {
-      return this.$store.state.conversation.current
-    }
-  },
   methods: {
     async loginBot() {
       // 确保用户已经登录，登录的用户有绑定的botId
       const botId = this.$store.state.authUser.botId
       const uri = `/bots/${botId}/login` // + context.page
       const data = await this.$axios.$get(uri)
-      console.log(data)
       if ('success' in data) {
         this.isBotLogin = data.success
       } else {
-        // {"qrcode":"http://weixin.qq.com/x/oe4Ssqs6eI7LqQcfKNIY"}
         this.loginQR = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${data.qrcode}`
       }
     }

@@ -6,14 +6,14 @@
         nuxtChat
       </h1>
       <h2 class="subtitle">
-        My bee&#39;s knees Nuxt.js project
+        微信个人机器人助理
       </h2>
       <div class="links">
         <nuxt-link
           v-if="!$store.state.authUser"
           to="/login"
           class="button--green"
-          >Login</nuxt-link
+          >登录</nuxt-link
         >
         <button v-else class="button button--green" @click.stop="logout">
           Logout
@@ -23,14 +23,14 @@
           target="_blank"
           class="button--grey"
         >
-          GitHub
+          文档
         </a>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import Logo from '~/components/Logo.vue'
 
@@ -55,7 +55,7 @@ export default Vue.extend({
 })
 </script>
 
-<style>
+<style scoped>
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
   @apply min-h-screen flex justify-center items-center text-center mx-auto;
