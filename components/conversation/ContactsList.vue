@@ -35,7 +35,7 @@ export default {
         // 过滤掉群消息 || 机器人主动发送的信息
         // todo 24 会变 / 机器人永远置顶，weight = 9999
         const filterMsgs = latestMsgs.filter(
-          (item) => !item.to.includes('@chatroom') && item.fromId !== 24
+          (item) => !item.to.includes('@chatroom') // && item.fromId !== 19
         )
         // 需要清零weight，不然是累加了
         filterMsgs.forEach((msg) => {
@@ -54,6 +54,7 @@ export default {
         return filteredArray.filter(function(contact) {
           if (contact.alias) {
             return (
+              contact.wechatId.includes(self.filters) ||
               contact.alias.includes(self.filters) ||
               contact.name.includes(self.filters)
             )
@@ -69,9 +70,7 @@ export default {
       return this.$store.state.search.keyword
     }
   },
-  created() {
-    this.$store.dispatch('contacts/init')
-  },
+  created() {},
   methods: {
     filterObject(obj, condition) {
       const filteredObj = {}

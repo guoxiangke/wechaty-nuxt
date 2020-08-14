@@ -48,6 +48,8 @@ export async function saveMsg(
   let next: boolean = true
   // save file first
   switch (type) {
+    // 语音消息，存不存储?决定在上一层逻辑
+    case MessageType.Audio:
     case MessageType.Image:
     case MessageType.Attachment: // mp3
     case MessageType.Video:
@@ -70,8 +72,6 @@ export async function saveMsg(
       break
     }
     case MessageType.MiniProgram: // todo  主动发送小程序！
-    case MessageType.Audio:
-      // 语音消息，不存储
       next = false
       break
     case MessageType.Contact:

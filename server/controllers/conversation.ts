@@ -173,10 +173,10 @@ export default class ConversationController {
         ['id', 'ASC']
       ],
       where: {
-        bot_id: botId,
-        type: Contact.Type.Personal, // Contact.type()
+        bot_id: botId
+        // type: Contact.Type.Personal // Contact.type()
         // 获取群成员，为了显示群消息，前段过滤群成员
-        from: [Type.Individual, Type.RoomOwner, Type.RoomMemeber] // 不显示群成员！
+        // from: [Type.Individual, Type.RoomOwner, Type.RoomMemeber] // 不显示群成员！
       }
     })
     // allContacts 转换成obj
@@ -204,7 +204,7 @@ export default class ConversationController {
     // 转换成obj
     const roomsObj: any = {}
     rooms.forEach((e) => {
-      const id = e.id
+      const id = e.roomId // xxx@chatroom
       roomsObj[id] = e
     })
     ctx.body = roomsObj

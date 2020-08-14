@@ -1,12 +1,5 @@
 <template>
-  <div
-    v-if="isLoaded"
-    id="scroll"
-    ref="scroll"
-    class="warpper"
-    :class="hightClass"
-    style="overflow-y: scroll;"
-  >
+  <div>
     <div class="header-info title text-xl border border-aliceblue bg-aliceblue">
       <div v-if="!isActive" class="p-4">
         Latest Msg
@@ -36,21 +29,53 @@
       </div>
     </div>
 
-    <div class="latestMsg  p-4">
-      <div v-if="!isActive">
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          :contact-id="message.fromId"
-        >
+    <div
+      v-if="isLoaded"
+      id="scroll"
+      ref="scroll"
+      class="warpper"
+      :class="hightClass"
+      style="overflow-y: scroll;"
+    >
+      <div class="latestMsg  p-4">
+        <div v-if="!isActive">
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            :contact-id="message.fromId"
+          >
+            <MsgItem :message="message" :contact="contacts[message.fromId]" />
+          </div>
+        </div>
+      </div>
+
+      <div v-if="isActive" class="">
+        <div v-for="message in conversation" :key="message.id" class="li">
           <MsgItem :message="message" :contact="contacts[message.fromId]" />
         </div>
       </div>
     </div>
 
-    <div v-if="isActive" class="">
-      <div v-for="message in conversation" :key="message.id" class="li">
-        <MsgItem :message="message" :contact="contacts[message.fromId]" />
+    <div v-if="!isDisabled">
+      <div class="relative">
+        <textarea
+          id="textarea"
+          ref="input"
+          v-model="newMessage"
+          type="textarea"
+          name="message"
+          placeholder="回车发布消息..."
+          :disabled="isDisabled || sending"
+          class="bg-aliceblue focus:bg-white focus:border-gray-300 placeholder-gray-600 duration-100 ease-in-out focus:outline-none border border-transparent "
+          @keyup.enter="sendMsg"
+        >
+        </textarea>
+        <div v-show="sending" class="lds-ring absolute right-0 top-auto">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,7 +87,22 @@ import MsgItem from './MsgItem'
 export default {
   name: 'MsgList',
   components: { MsgItem },
+  data() {
+    return {
+      newMessage: '',
+      sending: false
+    }
+  },
   computed: {
+    isDisabled() {
+      // var isMyObjectEmpty = !Object.keys(myObject).length;
+      return !Object.keys(this.current).length
+    },
+    to() {
+      // 消息发送给 谁？ wechatId/roomId xxx@chatroom
+      return this.current.wechatId || this.current.roomId
+    },
+
     messages() {
       // 首页显示的最近1000条信息
       return this.$store.state.messages.list
@@ -97,15 +137,42 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    this.$store.dispatch('messages/init')
-  },
   methods: {
+    focus() {
+      this.$nextTick(() => this.$refs.input.focus())
+    },
     scrollToEnd() {
-      const container = this.$refs.scroll // .querySelector('#scroll')
+      const container = this.$refs.scroll
       if (container) {
         container.scrollTop = container.scrollHeight
       }
+    },
+    async sendMsg() {
+      // 验证
+      if (this.newMessage === '') {
+        alert('消息不能为空')
+        this.focus()
+        return
+      }
+      const body = {
+        id: this.to,
+        content: {
+          type: 'text',
+          data: this.newMessage
+        }
+      }
+      // POST /api/bots/1/send
+      this.sending = true
+      const { success } = await this.$axios.$post('/bots/1/send', body)
+      this.sending = false
+      if (!success) {
+        alert('消息发送失败')
+      } else {
+        this.newMessage = ''
+        this.focus()
+      }
+      // scrollToBottom
+      this.scrollToEnd()
     }
   }
 }
@@ -113,7 +180,7 @@ export default {
 
 <style scoped>
 .h80 {
-  height: 90vh;
+  height: 80vh;
 }
 .h100 {
   height: 100vh;
@@ -128,5 +195,45 @@ export default {
 .li {
   padding: 1em;
   clear: both;
+}
+
+#textarea {
+  padding: 1em;
+  width: 100%;
+}
+/* // https://loading.io/css/ */
+.lds-ring {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border: 5px solid #15c399;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #15c399 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

@@ -4,11 +4,11 @@
       <div class="intercom-comment-container">
         <div class="intercom-comment-container-admin-avatar">
           <div class="intercom-avatar">
-            <img :src="contact.avatar" :alt="contact.name" />
+            <img v-lazy="contact.avatar" :alt="contact.name" />
           </div>
         </div>
         <div class="intercom-comment" :class="bgColor">
-          <div class="intercom-block-paragraph" v-html="content"></div>
+          <div v-html="content"></div>
         </div>
       </div>
     </div>
@@ -37,12 +37,19 @@ export default {
     },
     content() {
       let content = this.message.content.data
-      if (`${content}`.endsWith('.gif') || `${content}`.endsWith('.png')) {
-        content = '<img src="/' + content + '" />'
-        this.bgColor = 'bg-transparent'
-      } else if (content && content.url) {
-        // console.log(content)
-        content = `<div>
+      const type = this.message.type
+      switch (type) {
+        case 2: // MessageType.Audio voice
+          content = `<audio controls src="${content}"/>`
+          break
+        case 5: //  MessageType.Emoticon
+        case 6: //  MessageType.Image
+          content =
+            '<div  class="px-4 py-2"><img src="/' + content + '" /></div>'
+          this.bgColor = 'bg-transparent'
+          break
+        case 13: // Url
+          content = `<div>
         <a target="_blank" href="${content.url}">
           <div class="title text-indigo-600 font-medium"> <p>${content.title} </p> </div>
           <div class="desc">
@@ -51,6 +58,13 @@ export default {
           </div>
         </a>
         </div>`
+          break
+        case 7: // MessageType.Text
+          content = `<div class="px-4 py-2">${content}</div>`
+          break
+
+        default:
+          break
       }
       return content
     }
@@ -95,11 +109,11 @@ export default {
 }
 .intercom-comment {
   color: #606273;
-  padding: 10px 15px;
   border-radius: 4px;
   width: fit-content;
 }
 .intercom-block-paragraph {
+  padding: 10px 15px;
   margin-bottom: 0;
   font-size: 14px;
   line-height: 1.4;

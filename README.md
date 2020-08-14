@@ -13,6 +13,8 @@ https://wechaty.js.org/v/zh/api/
 
 http://localhost:3000/conversation
 
+- [ ] More info => 常用客服回复 一键发送
+- [ ] scrollToBottom when new message
 - [ ] error page.vue 美化
 - [ ] login 使用弹窗
 - [ ] CURD of config

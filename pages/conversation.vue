@@ -13,7 +13,6 @@
     </div>
     <div class="col-span-1 conversations">
       <MsgList />
-      <MsgSend />
     </div>
     <div class="col-span-2 infos invisible lg:invisible xl:visible p-4">
       <div v-if="!isBotLogin">
@@ -34,7 +33,7 @@ import RoomsList from '~/components/conversation/RoomsList'
 import ContactsList from '~/components/conversation/ContactsList'
 import RightInfo from '~/components/conversation/RightInfo'
 import MsgList from '~/components/conversation/MsgList'
-import MsgSend from '~/components/conversation/MsgSend'
+// import MsgSend from '~/components/conversation/MsgSend'
 import Search from '~/components/conversation/Search'
 
 export default {
@@ -45,8 +44,7 @@ export default {
     RoomsList,
     ContactsList,
     MsgList,
-    RightInfo,
-    MsgSend
+    RightInfo
   },
   data() {
     return {
@@ -59,7 +57,9 @@ export default {
       return this.$store.state.conversation.current
     }
   },
-  mounted() {
+  async mounted() {
+    await this.$store.dispatch('contacts/init')
+    await this.$store.dispatch('messages/init')
     this.loginBot()
   },
   sockets: {
@@ -82,7 +82,12 @@ export default {
         this.$store.commit('conversation/ADD', message)
       } else {
         // 未读消息 +1
-        this.$store.commit('contacts/INCREAE_UNREAD', message.fromId)
+        // eslint-disable-next-line no-lonely-if
+        if (message.to.includes('@chatroom')) {
+          this.$store.commit('rooms/INCREAE_UNREAD', message.to)
+        } else {
+          this.$store.commit('contacts/INCREAE_UNREAD', message.fromId)
+        }
       }
     }
   },

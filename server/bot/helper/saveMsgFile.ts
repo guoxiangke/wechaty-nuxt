@@ -43,7 +43,7 @@ export async function saveMsgFile(msg: Message, subDir: string) {
   const [fileBox, created] = await FileBoxModel.findOrCreate({
     where: { md5 },
     defaults: {
-      path: filePath,
+      path: filePath.replace('./static/', ''), // remove ./static
       msgId: msg.id
     }
   })

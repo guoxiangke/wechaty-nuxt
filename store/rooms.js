@@ -13,5 +13,11 @@ export const actions = {
 export const mutations = {
   INIT(state, items) {
     state.list = items
+  },
+  RESET_UNREAD(state, index) {
+    state.list[index].unreadCount = 0
+  },
+  INCREAE_UNREAD(state, index) {
+    state.list[index].unreadCount += 1
   }
 }
