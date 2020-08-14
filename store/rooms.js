@@ -7,6 +7,11 @@ export const actions = {
     const uri = '/conversation/1/rooms'
     const { data } = await this.$axios.get(uri)
     commit('INIT', data)
+  },
+  async reset_unread({ commit }, index) {
+    const uri = `/conversation/1/readed/${index}` // + context.page
+    await this.$axios.$post(uri)
+    commit('RESET_UNREAD', index)
   }
 }
 

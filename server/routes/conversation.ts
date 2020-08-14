@@ -13,6 +13,7 @@ router.get('/:bot_id', Controller.list)
 
 router.get('/:bot_id/messages', Controller.getMessages)
 router.get('/:bot_id/messages/:to', Controller.getMessagesByTo)
+router.post('/:bot_id/readed/:to', Controller.resetUnread)
 router.get('/:bot_id/contacts', Controller.getAllContacts)
 router.get('/:bot_id/rooms', Controller.getAllRooms)
 

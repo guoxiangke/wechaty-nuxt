@@ -6,6 +6,8 @@
 基于 nuxt, wechaty 开发的个人微信号机器人 UI 平台 @see https://github.com/beclass/wxbot.git
 
 https://wechaty.js.org/v/zh/api/
+https://github.com/wechaty/wechaty/issues
+https://github.com/wechaty/wechaty-puppet-padplus/issues
 
 > Typescript Version of UI bot
 
@@ -13,6 +15,7 @@ https://wechaty.js.org/v/zh/api/
 
 http://localhost:3000/conversation
 
+- [x] 消息 UnreadCount reset
 - [ ] More info => 常用客服回复 一键发送
 - [ ] scrollToBottom when new message
 - [ ] error page.vue 美化

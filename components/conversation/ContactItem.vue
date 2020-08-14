@@ -50,8 +50,8 @@ export default {
       // 设置当前 active的用户 对话
       this.$store.commit('conversation/ACTIVE', this.contact)
       this.$store.commit('conversation/SET_TYPE', 'contact')
-
-      this.$store.commit('contacts/RESET_UNREAD', this.contact.id)
+      // 重置 未读消息
+      this.$store.dispatch('contacts/reset_unread', this.contact.id)
     }
   }
 }

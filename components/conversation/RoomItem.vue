@@ -46,7 +46,9 @@ export default {
       // 设置当前 active的群 对话
       this.$store.commit('conversation/ACTIVE', this.room)
       this.$store.commit('conversation/SET_TYPE', 'room')
-      // this.$store.commit('rooms/RESET_UNREAD', this.room.id)
+
+      // 重置 未读消息
+      this.$store.dispatch('rooms/reset_unread', this.room.roomId)
     }
   }
 }

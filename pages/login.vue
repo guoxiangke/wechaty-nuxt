@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container background">
     <div>
       <form v-if="!$store.state.authUser" @submit.prevent="login">
         <div class="field">
@@ -87,4 +87,27 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.background {
+  background: url(https://cdn01.gitter.im/_s/65a345de6/images/home/banner.jpg)
+    no-repeat center center;
+  background-size: cover;
+  background-color: #512e92;
+  position: fixed;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+</style>

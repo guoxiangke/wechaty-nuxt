@@ -220,5 +220,27 @@ export default class ConversationController {
     })
   }
 
-  //
+  // reset unread count
+  public static async resetUnread(ctx: Koa.Context): Promise<void> {
+    if (!ctx.params.bot_id) throw new Error('缺少bot_id')
+    if (!ctx.params.to) throw new Error('缺少to')
+
+    const to = ctx.params.to
+    if (to.includes('@chatroom')) {
+      await Room.update(
+        { unreadCount: 0 },
+        {
+          where: { bot_id: ctx.params.bot_id, room_id: ctx.params.to }
+        }
+      )
+    } else {
+      await ContactModel.update(
+        { unreadCount: 0 },
+        {
+          where: { bot_id: ctx.params.bot_id, id: ctx.params.to }
+        }
+      )
+    }
+    ctx.body = { success: true }
+  }
 }

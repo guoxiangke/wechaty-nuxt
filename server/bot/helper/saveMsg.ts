@@ -3,7 +3,7 @@ import { MessageType } from 'wechaty-puppet'
 
 import { Type as ContactModelType } from '../../models/wechat/Contact'
 
-import { Message as MsgModel, Bot } from '../../models'
+import { Message as MsgModel, Bot, Room } from '../../models'
 import { Vars as Globals } from '../../global-var'
 import { saveOrGetContact } from './saveOrGetContact'
 import { saveMsgFile } from './saveMsgFile'
@@ -50,10 +50,10 @@ export async function saveMsg(
   switch (type) {
     // 语音消息，存不存储?决定在上一层逻辑
     case MessageType.Audio:
+    case MessageType.Emoticon:
     case MessageType.Image:
     case MessageType.Attachment: // mp3
-    case MessageType.Video:
-    case MessageType.Emoticon: {
+    case MessageType.Video: {
       const subDir = MessageType[type].toLowerCase()
       // get content to save
       content = await saveMsgFile(msg, subDir)
@@ -117,8 +117,20 @@ export async function saveMsg(
     content: { data: content }
   })
 
-  contactModel.unreadCount += 1
-  // broadcast in controller
+  if (!room) {
+    contactModel.unreadCount += 1
+    contactModel.save()
+  } else {
+    const roomInstance: Room | null = await Room.findOne({
+      where: { room_id: room.id }
+    })
+    if (roomInstance) {
+      roomInstance.unreadCount += 1
+      roomInstance.save()
+    }
+  }
+
+  // broadcast in controller todo by bot as room
   // ctx.socket.emit('broadcastEmit', '1000') // NOT WORK !!!
   Globals.io.socket.sockets.emit('newMsgEmit', res) // WORK !!!
   return res
