@@ -8,3 +8,4 @@ npm-debug.log
 /server/models/imports/*.json
 /server/database/db.sqlite
 /server
+package-lock.json

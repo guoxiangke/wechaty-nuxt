@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:10.20.1
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -21,8 +21,8 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*
 
 # Install app dependencies
-RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
-RUN cnpm install
+# RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
+RUN npm install --no-optional
 
 # nuxt build for production
 RUN npm run build
