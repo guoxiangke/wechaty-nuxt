@@ -28,6 +28,7 @@ async function onMessage(this: Wechaty, msg: Message) {
   //   )
   //   return
   // }
+  // todo check if login ready
   log.info('onMessage', `${msg}`)
   const bot: Bot | null = await getBot(wechaty)
   if (!bot) throw new Error('no bot!')
@@ -263,7 +264,10 @@ async function onMessage(this: Wechaty, msg: Message) {
     }
 
     if (!isReplied && bot.config.autoReply) {
-      await sender.say(await getDefaultReply())
+      if (sender.id !== 'weixin') {
+        // 微信团队等不处理 todo more
+        await sender.say(await getDefaultReply())
+      }
     }
   }
 

@@ -4,7 +4,7 @@ import { Vars as Global } from '../global-var'
 export async function getDefaultReply() {
   const replies: Array<AutoReply> = await AutoReply.findAll()
   let defaultReply: string =
-    '亲，暂无法解析本次请求[抱拳]\r请回复以下关键词获取资源\r===============\r'
+    '非常抱歉，没有理解你的意思，若有问题请反馈给我们，我们会第一时间处理。\r请回复以下关键词获取资源\r===============\r'
   for (const reply of replies) {
     // https://www.cnblogs.com/season-huang/p/3544873.html
     defaultReply += `【${reply.keyword}】\r`

@@ -1,47 +1,81 @@
 <template>
   <div class="container background">
     <div>
-      <form v-if="!$store.state.authUser" @submit.prevent="login">
-        <div class="field">
-          <label class="label">Email</label>
-          <div class="control">
+      <div v-if="!$store.state.authUser" class="w-full max-w-xs">
+        <form
+          class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          @submit.prevent="login"
+        >
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="email"
+            >
+              Email
+            </label>
             <input
               v-model="email"
               name="email"
-              class="input"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              placeholder="Text input"
+              placeholder="admin@unqiue.com"
             />
           </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
+          <div class="mb-6">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="password"
+            >
+              Password
+            </label>
             <input
               v-model="password"
               name="password"
-              class="input"
-              type="text"
-              placeholder="Text input"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              type="password"
+              placeholder="password"
             />
+            <p v-if="false" class="text-red-500  border-red-500 text-xs italic">
+              Default password.
+            </p>
           </div>
-        </div>
-
-        <div class="field is-grouped">
-          <div class="control">
-            <button class="button is-link" type="submit">Submit</button>
+          <div class="flex items-center justify-between">
+            <button
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Sign In
+            </button>
+            <a
+              class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+              href="#"
+            >
+              Forgot Password?
+            </a>
           </div>
-        </div>
-      </form>
+        </form>
+        <p class="text-center text-gray-500 text-xs">
+          &copy;2020 Acme Corp. All rights reserved.
+        </p>
+      </div>
       <div v-else>
-        <p>Login Already, <nuxt-link to="/"> go to Homepage?</nuxt-link></p>
+        <p>
+          You'r already logged in,
+        </p>
 
-        <div class="field is-grouped">
-          <div class="control">
-            <button class="button is-link" @click.stop="logout">Logout</button>
-          </div>
-        </div>
+        <nuxt-link
+          to="/"
+          class="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Homepage
+        </nuxt-link>
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          @click.stop="logout"
+        >
+          Logout
+        </button>
       </div>
     </div>
   </div>
@@ -88,26 +122,20 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.container {
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 100%;
+}
+
 .background {
   background: url(https://cdn01.gitter.im/_s/65a345de6/images/home/banner.jpg)
     no-repeat center center;
   background-size: cover;
   background-color: #512e92;
-  position: fixed;
-  overflow: auto;
-  width: 100%;
-  height: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
 }
 </style>

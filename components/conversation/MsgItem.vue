@@ -1,5 +1,5 @@
 <template>
-  <div class="warpper">
+  <div v-if="contact" class="warpper">
     <div :class="algin">
       <div class="intercom-comment-container">
         <div class="intercom-comment-container-admin-avatar">
@@ -7,7 +7,7 @@
             <img v-lazy="contact.avatar" :alt="contact.name" />
           </div>
         </div>
-        <div class="intercom-comment" :class="bgColor">
+        <div class="intercom-comment max-w-full bg-gray-200 break-all">
           <div v-html="content"></div>
         </div>
       </div>
@@ -25,11 +25,6 @@ export default {
   props: {
     message: Object,
     contact: Object
-  },
-  data() {
-    return {
-      bgColor: 'bg-gray-200'
-    }
   },
   computed: {
     algin() {
