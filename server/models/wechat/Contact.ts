@@ -82,7 +82,7 @@ Contact.init(
       allowNull: false
     },
     unreadCount: {
-      type: new DataTypes.TINYINT(),
+      type: new DataTypes.SMALLINT(),
       defaultValue: 0
     }
   },
