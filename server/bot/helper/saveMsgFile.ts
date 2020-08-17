@@ -23,9 +23,19 @@ export async function saveMsgFile(msg: Message, subDir: string) {
   if (ext) {
     filePath += `.${ext}`
   }
+  const type = msg.type()
+  switch (type) {
+    case MessageType.Emoticon:
+      filePath += '.gif'
+      break
+    case MessageType.Audio:
+      // https://www.jianshu.com/p/fbccd8a52374
+      // todo https://kn007.net/topics/decoding-qq-wechat-silk-v3-encoded-audio-to-mp3-or-other-formats/
+      filePath += '.mp3'
+      break
 
-  if (msg.type() === MessageType.Emoticon) {
-    filePath += '.gif'
+    default:
+      break
   }
 
   // await file.toFile(filePath)

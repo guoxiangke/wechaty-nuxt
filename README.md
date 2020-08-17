@@ -45,9 +45,11 @@ http://localhost:3000/conversation
 - 4. ts-node server/models/imports/init.ts && npm run dev
 - 5. curl http://127.0.0.1:3000/api/bots/1/login
 
-## Deploy
+## Deploy on production
 
-/usr/src/app/node_modules/.bin/ts-node
+- cp .env.example .env && vi .env
+- docker-compose up -d
+- docker-compose exec app /usr/src/app/node_modules/.bin/ts-node server/models/imports/init.ts
 
 ## Documents
 

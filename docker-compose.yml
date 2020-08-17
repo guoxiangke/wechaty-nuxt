@@ -1,7 +1,11 @@
 version: '3'
+volumes:
+  db_data:
 services:
   app:
     image: guoxiangke/nuxt-chat
+    depends_on:
+      - db
     build:
       context: .
       dockerfile: 'Dockerfile'
@@ -10,8 +14,6 @@ services:
       - '3000:3000'
     environment:
       - TZ=Asia/Shanghai
-    links:
-      - db:mysql
     volumes:
       - ./.env:/usr/src/app/.env
       # Uncomment 4 Dev
@@ -20,7 +22,6 @@ services:
       - ./server:/usr/src/app/server
       #   - ./server/database/db.sqlite:/usr/src/app/server/database/db.sqlite
       #   - ./server/models/imports:/usr/src/app/server/models/imports
-      - ./files:/usr/src/app/files
       # - ./package.json:/usr/src/app/package.json
       # Uncomment on Local
       # - ../../../Downloads/Share/19_Psalm:/usr/src/app/files/19_Psalm # 4dev resources(mp3) for one cron task
@@ -35,7 +36,7 @@ services:
       ]
     restart: unless-stopped
     volumes:
-      - ./server/database/data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: nuxtchat
       MYSQL_ROOT_PASSWORD: root

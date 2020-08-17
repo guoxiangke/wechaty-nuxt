@@ -29,20 +29,24 @@ async function onMessage(this: Wechaty, msg: Message) {
   //   return
   // }
   // todo check if login ready
-  log.info('onMessage', `${msg}`)
   const bot: Bot | null = await getBot(wechaty)
   if (!bot) throw new Error('no bot!')
   const sender: Contact | null = msg.from()
-  if (!sender) {
-    log.info('onMessage', 'no sender msg!')
-    return
-  }
+  if (!sender) throw new Error('!sender')
+
+  log.info('onMessage', `${msg}`)
 
   const text = msg.text().trim()
   const room: Room | null = msg.room()
   const type: number = msg.type()
   // todo Recalled 不支持转发，无法撤回
   if (type === MessageType.Recalled) {
+    return
+  }
+  log.info('Message', text, type)
+
+  if (sender.type() === Contact.Type.Official) {
+    log.info('onMessage', 'todo 暂不处理公众号消息')
     return
   }
   const filehelper = wechaty.Contact.load('filehelper')
