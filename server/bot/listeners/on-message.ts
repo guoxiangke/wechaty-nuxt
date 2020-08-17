@@ -34,8 +34,6 @@ async function onMessage(this: Wechaty, msg: Message) {
   const sender: Contact | null = msg.from()
   if (!sender) throw new Error('!sender')
 
-  log.info('onMessage', `${msg}`)
-
   const text = msg.text().trim()
   const room: Room | null = msg.room()
   const type: number = msg.type()
@@ -43,12 +41,14 @@ async function onMessage(this: Wechaty, msg: Message) {
   if (type === MessageType.Recalled) {
     return
   }
-  log.info('Message', text, type)
+  // log.info('Message', text, type)
 
   if (sender.type() === Contact.Type.Official) {
     log.info('onMessage', 'todo 暂不处理公众号消息')
     return
   }
+
+  log.info('onMessage', `${msg}`)
   const filehelper = wechaty.Contact.load('filehelper')
 
   let msgSenderAlias = await sender.alias()

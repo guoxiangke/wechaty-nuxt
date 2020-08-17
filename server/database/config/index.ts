@@ -1,8 +1,8 @@
 // DOC @see https://www.jianshu.com/p/0738e29d8af3
 import { Sequelize } from 'sequelize'
 // const Sequelize = require('sequelize')
-import dotenv from 'dotenv'
-dotenv.config()
+// import dotenv from 'dotenv'
+// dotenv.config()
 const dbName = process.env.DB_NAME || 'nuxtchat'
 const dbHost = process.env.DB_HOST || 'db:3306'
 const dbUser = process.env.DB_USER || 'root'
