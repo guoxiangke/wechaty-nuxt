@@ -44,8 +44,8 @@
     "wechaty-puppet-padplus": "^0.7.34"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.13.3",
-    "@nuxt/typescript-build": "^0.6.7",
+    "@nuxt/types": "^2.14.3",
+    "@nuxt/typescript-build": "^2.0.2",
     "@nuxtjs/eslint-config-typescript": "^1.0.0",
     "@nuxtjs/eslint-module": "^1.0.0",
     "@nuxtjs/tailwindcss": "^1.0.0",
