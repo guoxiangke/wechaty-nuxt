@@ -21,7 +21,7 @@ RUN set -ex; \
 
 # Install app dependencies
 # RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
-RUN npm install --no-optional
+RUN npm install
 
 # nuxt build for production
 RUN npm run build
