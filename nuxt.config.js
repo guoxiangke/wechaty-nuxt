@@ -48,7 +48,7 @@ module.exports = {
    */
   modules: [
     // Doc: https://github.com/nuxt-community/proxy-module
-    '@nuxtjs/proxy',
+    // '@nuxtjs/proxy',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
