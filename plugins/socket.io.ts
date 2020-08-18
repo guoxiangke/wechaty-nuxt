@@ -3,8 +3,8 @@ import io from 'socket.io-client'
 import VueSocketIOExt from 'vue-socket.io-extended'
 // import dotenv from 'dotenv'
 // dotenv.config()
-const host = process.env.SOCKET_HOST || '192.168.31.23'
-const port = process.env.PORT || 3000
+const host = '192.168.31.23' // process.env.SOCKET_HOST ||
+const port = 3000 // process.env.PORT ||
 const socket = io(`http://${host}:${port}`)
 
 export default ({ store }: any) => {
