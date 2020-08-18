@@ -33,7 +33,7 @@ Room.init(
       allowNull: false
     },
     announce: {
-      type: DataTypes.STRING()
+      type: DataTypes.TEXT
     },
     avatar: {
       type: DataTypes.STRING
