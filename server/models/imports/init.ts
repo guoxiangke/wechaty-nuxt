@@ -17,7 +17,7 @@ db.sync({ force: true })
       token,
       config: {
         logMsg: true,
-        autoReply: true,
+        autoReply: false,
         welcomeMsg: process.env.BOT_WELCOME_MSG || 'Welcome'
       },
       status: false // 是否登录
@@ -26,7 +26,7 @@ db.sync({ force: true })
     const user = new User()
     user.name = process.env.USER_NAME || 'admin'
     user.avatar = process.env.USER_AVATAR || 'https://nuxtjs.org/logos/nuxt.svg'
-    user.email = process.env.USER_EMAIL || 'admin@unqiue.com'
+    user.email = process.env.USER_EMAIL || 'admin@unique.com'
     user.password = process.env.USER_PASSWORD || 'password'
 
     user.loginAt = new Date()
