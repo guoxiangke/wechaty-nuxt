@@ -14,8 +14,8 @@ import { Bot } from '../../models'
  * 3. confirmation friendship(friend event)
  * @see https://github.com/wechaty/wechaty/blob/1523c5e02be46ebe2cc172a744b2fbe53351540e/examples/friend-bot.ts
  */
-
-async function onFriendship(this: Wechaty, friendship: Friendship) {
+// export { onFriendship }
+export async function onFriendship(this: Wechaty, friendship: Friendship) {
   const wechaty: Wechaty = this
   // const fileHelper = Contact.load('filehelper')
   // await fileHelper.say(logMsg)
@@ -49,4 +49,4 @@ async function onFriendship(this: Wechaty, friendship: Friendship) {
     }
   }
 }
-module.exports = onFriendship
+// module.exports = onFriendship

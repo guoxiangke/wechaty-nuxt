@@ -8,11 +8,11 @@ import { saveOrGetRoom } from '../helper/saveOrGetRoom'
 import { Vars as Global } from '../global-var'
 import { initSchedule } from '../helper/initSchedule'
 
-module.exports = onReady
+// module.exports = onReady
 // Module '"./listeners/on-ready"' declares 'onReady' locally, but it is not exported.ts(2459)
 // on-ready.ts(13, 16): 'onReady' is declared here.
 // export { onReady }
-async function onReady(this: Wechaty) {
+export async function onReady(this: Wechaty) {
   // wechaty: Wechaty, bot: Bot
   const wechaty = this
   const bot: Bot = await Global.getBot(wechaty)

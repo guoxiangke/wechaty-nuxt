@@ -2,10 +2,12 @@ import { log } from 'brolog'
 import { Room, Contact, Wechaty } from 'wechaty'
 
 // Global.autoReply 全局控制变量
-import { ContactSelf } from 'wechaty/dist/src/user'
+// import { ContactSelf } from 'wechaty/dist/src/user'
 import { Vars as Global } from '../global-var'
 
-async function onRoomJoin(
+// export { onRoomJoin }
+// module.exports = onRoomJoin
+export async function onRoomJoin(
   this: Wechaty,
   room: Room,
   inviteeList: Array<Contact>,
@@ -20,7 +22,7 @@ async function onRoomJoin(
   const isOwner = owner.self()
 
   // 如果机器人被拉到一个新的群组里, inviteeList[0] === wechay.self()
-  const aBot: ContactSelf = wechay.userSelf()
+  const aBot: Contact = wechay.userSelf()
   if (!aBot) throw new Error('!aBot at onRoomJoin line 24')
   if (inviteeList[0].id === aBot.id) {
     await room.say('新人报道[转圈]，多多关照[抱拳]')
@@ -63,5 +65,3 @@ async function onRoomJoin(
 
   // 更新 contacts 表
 }
-
-module.exports = onRoomJoin

@@ -5,10 +5,6 @@
 
 基于 nuxt, wechaty 开发的个人微信号机器人 UI 平台 @see https://github.com/beclass/wxbot.git
 
-https://wechaty.js.org/v/zh/api/
-https://github.com/wechaty/wechaty/issues
-https://github.com/wechaty/wechaty-puppet-padplus/issues
-
 > Typescript Version of UI bot
 
 ## Todo
@@ -56,6 +52,10 @@ http://localhost:3000/conversation
 - https://sequelize.org/master/manual/model-basics.html
 - https://wechaty.js.org/v/zh/api/message#message-from-contact
 -
+
+https://wechaty.js.org/v/zh/api/
+https://github.com/wechaty/wechaty/issues
+https://github.com/wechaty/wechaty-puppet-padplus/issues
 
 ## Done
 

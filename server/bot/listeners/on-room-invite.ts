@@ -3,7 +3,9 @@ import { saveOrGetRoom } from '../helper/saveOrGetRoom'
 import { Bot } from '../../models'
 import { getBot } from '../helper/getBot'
 
-async function onRoomInvite(
+// export { onRoomInvite }
+// module.exports = onRoomInvite
+export async function onRoomInvite(
   this: Wechaty,
   room: Room,
   invitation: RoomInvitation
@@ -16,5 +18,3 @@ async function onRoomInvite(
   await saveOrGetRoom(bot, room)
   log.info(`BotJoinedANewRoom`, `${room}`)
 }
-
-module.exports = onRoomInvite

@@ -1,17 +1,19 @@
 import { log } from 'brolog'
 import { Wechaty } from 'wechaty'
-import { PuppetPadplus } from 'wechaty-puppet-padplus'
+// import { PuppetPadplus } from 'wechaty-puppet-padplus'
 
 import { Bot } from '../models/Bot'
 import { onLogin } from './listeners/on-login'
 import { onLogout } from './listeners/on-logout'
-// import { onReady } from './listeners/on-ready'
-// import { onMessage } from './listeners/on-message'
-// import { onReady } from './listeners/on-ready'
-// const { Robot } = require('../models/robot')
-// const { onLogin } = require('./listeners/on-login')
-// const onFriendShip = require('./lib/FriendShip')
-// const { onRoomJoin, onRoomLeave } = require('./lib/Room')
+import { onReady } from './listeners/on-ready'
+import { onMessage } from './listeners/on-message'
+import { onRoomJoin } from './listeners/on-room-join'
+
+import { onRoomInvite } from './listeners/on-room-invite'
+import { onRoomTopic } from './listeners/on-room-topic'
+import { onFriendship } from './listeners/on-friendship'
+
+// const { onRoomJoin } = require('./lib/Room') //, onRoomLeave
 
 class Wechat {
   // Repository<Bot>
@@ -56,14 +58,13 @@ class Wechat {
           log.error('机器人故障，error：' + error)
           reject(error)
         })
-
       // wechaty.on('heartbeat', './listeners/on-heartbeat')
-      wechaty.on('room-join', './listeners/on-room-join')
-      wechaty.on('room-invite', './listeners/on-room-invite')
-      wechaty.on('room-topic', './listeners/on-room-topic')
-      wechaty.on('friendship', './listeners/on-friendship')
-      wechaty.on('message', './listeners/on-message')
-      wechaty.on('ready', './listeners/on-ready')
+      wechaty.on('room-join', onRoomJoin)
+      wechaty.on('room-invite', onRoomInvite)
+      wechaty.on('room-topic', onRoomTopic)
+      wechaty.on('friendship', onFriendship)
+      wechaty.on('message', onMessage)
+      wechaty.on('ready', onReady)
       wechaty
         .start()
         .then(() => log.info('Bot Started.'))

@@ -5,8 +5,9 @@ import { Room as RoomModel } from '../../models'
 
 // 群名防篡改功能
 // 测试通过！
-module.exports = onRoomTopic
-async function onRoomTopic(
+// module.exports = onRoomTopic
+// export { onRoomTopic }
+export async function onRoomTopic(
   room: Room,
   newTopic: string,
   oldTopic: string,
@@ -35,6 +36,6 @@ async function onRoomTopic(
   }
 }
 
-async function updateTopic(aRoom: RoomModel, newTopic: string) {
+export async function updateTopic(aRoom: RoomModel, newTopic: string) {
   await aRoom.update({ topic: newTopic })
 }

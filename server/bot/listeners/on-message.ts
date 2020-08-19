@@ -16,9 +16,10 @@ import { forwardMsg } from '../helper/forwardMsg'
 import { saveMsg } from '../helper/saveMsg'
 
 // @see https://github.com/wechaty/wechaty/issues/2007
-module.exports = onMessage
+// module.exports = onMessage
 // @see http://www.semlinker.com/ts-this-param-type/
-async function onMessage(this: Wechaty, msg: Message) {
+// export { onMessage }
+export async function onMessage(this: Wechaty, msg: Message) {
   const wechaty: Wechaty = this
   // console.log(this)
   // if (msg.age() > 300) {
@@ -280,7 +281,7 @@ async function onMessage(this: Wechaty, msg: Message) {
   // save msg in db end
 }
 
-async function dbSave(bot: Bot, msg: Message, room: Room | null) {
+export async function dbSave(bot: Bot, msg: Message, room: Room | null) {
   // 只保存个人聊天记录 和 配置的群 config: { logMsg: true, autoReply: false }
   let isNeedSave = false
   if (!room) {
