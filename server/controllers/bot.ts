@@ -89,12 +89,21 @@ export default class BotController {
     const wechaty = Global.getWechaty(bot)
     if (!wechaty) throw new Error('no wechay to call on Say')
 
-    const content = ctx.request.body.content.data
-    const to = ctx.request.body.id
-
+    // https://stackoverflow.com/questions/33751203/how-to-parse-multipart-form-data-body-with-koa
+    // const { body, files } = ctx.request
+    const content = ctx.request.body
+    // const content = ctx.request.body.data
+    // const to = ctx.request.body.id
+    // const type = ctx.request.body.type // default: text
+    content.file = {}
+    if (ctx.request.files && 'file' in ctx.request.files) {
+      content.file.path = ctx.request.files.file.path
+      content.file.name = ctx.request.files.file.name
+      content.file.type = ctx.request.files.file.type
+    }
     // todo
     const kfId: any = 1
-    const res: MsgModel = await say(to, content, bot, kfId)
+    const res: MsgModel = await say(content, bot, kfId)
     ctx.body = { success: res.msgId }
   }
 }

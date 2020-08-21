@@ -1,16 +1,19 @@
 import * as fs from 'fs' // https://blog.csdn.net/u013782762/article/details/76598999
 import * as path from 'path' // http://nodejs.cn/api/path.html
 import Koa from 'koa'
-// import jwt from 'koa-jwt'
-import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
 // @ts-ignore
 import { Nuxt, Builder } from 'nuxt'
 // const session = require('koa-session')
 // import passport from 'koa-passport';
+import koaBody from 'koa-body'
 import passport from './interface/passport'
 import { Vars as Global } from './global-var'
+// import jwt from 'koa-jwt'
+// import bodyParser from 'koa-bodyparser'
+// const koaBody = require('koa-body')
+
 const consola = require('consola')
 // Doc: https://www.npmjs.com/package/consola
 // import Consola from 'consola' // todo
@@ -74,7 +77,9 @@ async function start() {
   // app.use(logger(winston))
 
   // Enable bodyParser with default options
-  app.use(bodyParser())
+  // app.use(formidable()) // https://stackoverflow.com/questions/33751203/how-to-parse-multipart-form-data-body-with-koa
+  // app.use(bodyParser())
+  app.use(koaBody({ multipart: true }))
 
   // sessions
   // https://www.cnblogs.com/shenshangzz/p/9973422.html

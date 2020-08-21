@@ -55,7 +55,27 @@ export default {
         </div>`
           break
         case 7: // MessageType.Text
-          content = `<div class="px-4 py-2">${content}</div>`
+          // 主动发送的附件
+          if (content.startsWith('<msg>')) {
+            const attach = content.replace(/<\/?[^>]+(>|$)/g, '')
+            if (
+              attach.toLowerCase().endsWith('jpg') ||
+              attach.toLowerCase().endsWith('png') ||
+              attach.toLowerCase().endsWith('jpeg') ||
+              attach.toLowerCase().endsWith('gif')
+            ) {
+              content =
+                '<div  class="px-4 py-2"><img src="' + attach + '" /></div>'
+              this.bgColor = 'bg-transparent'
+            } else {
+              content = `<div class="px-4 py-2"> <a href="${attach}" target="_blank" title="点击下载"> 附件📎${attach
+                .split('.')
+                .pop()}</a></div>`
+            }
+          } else {
+            content = `<div class="px-4 py-2">${content}</div>`
+          }
+
           break
 
         default:

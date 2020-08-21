@@ -58,6 +58,14 @@
 
     <div v-if="!isDisabled">
       <div class="relative">
+        <input
+          id="file"
+          ref="file"
+          type="file"
+          name="file"
+          class="m-4 mr-0 ml-0 bg-aliceblue p-4"
+          @change="handleFileUpload"
+        />
         <textarea
           id="textarea"
           ref="input"
@@ -89,6 +97,7 @@ export default {
   components: { MsgItem },
   data() {
     return {
+      file: '',
       newMessage: '',
       sending: false
     }
@@ -138,6 +147,9 @@ export default {
   },
   created() {},
   methods: {
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0]
+    },
     focus() {
       this.$nextTick(() => this.$refs.input.focus())
     },
@@ -148,27 +160,34 @@ export default {
       }
     },
     async sendMsg() {
-      // 验证
-      if (this.newMessage === '') {
+      // 验证, 文件/文字 选其一
+      if (this.newMessage.trim() === '' && this.file === '') {
         alert('消息不能为空')
+        this.newMessage = ''
         this.focus()
         return
       }
-      const body = {
-        id: this.to,
-        content: {
-          type: 'text',
-          data: this.newMessage
-        }
-      }
       // POST /api/bots/1/send
       this.sending = true
-      const { success } = await this.$axios.$post('/bots/1/send', body)
+      const formData = new FormData()
+      if (this.file) {
+        formData.append('file', this.file)
+      }
+      formData.append('to', this.to)
+      formData.append('type', 'text')
+      formData.append('data', this.newMessage.trim())
+      const { success } = await this.$axios.$post('/bots/1/send', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
       this.sending = false
       if (!success) {
         alert('消息发送失败')
       } else {
         this.newMessage = ''
+        this.file = ''
+        this.$refs.file.value = ''
         this.focus()
       }
       // scrollToBottom
@@ -180,7 +199,7 @@ export default {
 
 <style scoped>
 .h80 {
-  height: 80vh;
+  height: 68vh;
 }
 .h100 {
   height: 100vh;
