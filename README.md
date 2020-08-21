@@ -12,6 +12,7 @@
 http://localhost:3000/conversation
 
 - [x] 消息 UnreadCount reset
+- [x] 发送文件和表情
 - [ ] More info => 常用客服回复 一键发送
 - [ ] scrollToBottom when new message
 - [ ] error page.vue 美化

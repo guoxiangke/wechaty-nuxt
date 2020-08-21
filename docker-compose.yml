@@ -15,12 +15,13 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./.env:/usr/src/app/.env
+      - ./.env:/usr/src/app/.environment
+      # - ./1.memory-card.json:/usr/src/app/1.memory-card.json
       # Uncomment 4 Dev
       # 把./bot排除在外，这样，每次修改代码，不用重复构建镜像，直接使用cache
-      - ./1.memory-card.json:/usr/src/app/1.memory-card.json
       - ./server:/usr/src/app/server
-      #   - ./server/database/db.sqlite:/usr/src/app/server/database/db.sqlite
+      - ./static/files:/usr/src/app/static/files
+      # - ./server/database/db.sqlite:/usr/src/app/server/database/db.sqlite
       #   - ./server/models/imports:/usr/src/app/server/models/imports
       # - ./package.json:/usr/src/app/package.json
       # Uncomment on Local

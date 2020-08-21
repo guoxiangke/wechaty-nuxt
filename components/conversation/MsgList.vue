@@ -199,7 +199,7 @@ export default {
 
 <style scoped>
 .h80 {
-  height: 68vh;
+  height: 65vh;
 }
 .h100 {
   height: 100vh;
