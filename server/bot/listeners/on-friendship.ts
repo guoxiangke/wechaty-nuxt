@@ -17,9 +17,10 @@ import { Bot } from '../../models'
 // export { onFriendship }
 export async function onFriendship(this: Wechaty, friendship: Friendship) {
   const wechaty: Wechaty = this
-  // const fileHelper = Contact.load('filehelper')
-  // await fileHelper.say(logMsg)
-
+  const bot: Bot = await getBot(wechaty)
+  // bot 配置是否自动通过 好友请求
+  if (bot.config.autoFriends === false) return
+  // todo 好友请求频率限制
   switch (friendship.type()) {
     case Friendship.Type.Receive: {
       log.info(
@@ -43,7 +44,6 @@ export async function onFriendship(this: Wechaty, friendship: Friendship) {
     case Friendship.Type.Confirm: {
       log.info('onFriendshipConfirm' + friendship.contact().name())
       // 更新 contacts 表
-      const bot: Bot = await getBot(wechaty)
       await saveOrGetContact(bot, friendship.contact(), Type.Individual)
       break
     }

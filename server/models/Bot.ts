@@ -11,7 +11,7 @@ export class Bot extends Model {
   public bind!: string | null
   public description!: string
   public token!: string
-  // todo  自定义参数json：{logMsg:true, autoReply:true, welcomeMsg:'Welcome'}
+  // todo  自定义参数json：{logMsg:true, autoReply:true, welcomeMsg:'Welcome', autoFriends:false}
   public config!: any // 是否保存 个人 消息/文件
   public status!: boolean // 是否登录
 }
